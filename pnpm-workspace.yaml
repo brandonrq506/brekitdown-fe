@@ -1,3 +1,7 @@
+minimumReleaseAge: 4320 # 3 days in minutes, if you'd like 7 days then use 10080.
+minimumReleaseAgeExclude:
+  - vite-plus
+  - "@voidzero-dev/vite-plus-core"
 catalog:
   vite: npm:@voidzero-dev/vite-plus-core@0.2.8
   vite-plus: 0.2.8
