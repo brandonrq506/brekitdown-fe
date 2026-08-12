@@ -1,6 +1,7 @@
 {
   "npm.scriptRunner": "vp",
   "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.quickSuggestions": { "strings": "on" },
   "[javascript]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
