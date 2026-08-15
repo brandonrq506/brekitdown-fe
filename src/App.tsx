@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ThemeToggle } from "./features/theme/components/ThemeToggle";
 import { api, GOALS_ENDPOINT } from "./libs/axios";
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
         Count is {count}
       </button>
       <p className="text-sm">{goals.length} goals loaded</p>
+      <ThemeToggle />
     </main>
   );
 }
