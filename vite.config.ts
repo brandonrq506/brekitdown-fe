@@ -30,6 +30,14 @@ export default defineConfig({
       ],
       "vite-plus/prefer-vite-plus-imports": "error",
     },
+    overrides: [
+      {
+        files: ["src/routes/**/*.tsx"],
+        rules: {
+          "react/only-export-components": "off",
+        },
+      },
+    ],
     options: {
       typeAware: true,
       typeCheck: true,
