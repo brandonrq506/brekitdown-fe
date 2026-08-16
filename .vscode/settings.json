@@ -15,6 +15,15 @@
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "oxc.fmt.configPath": "./vite.config.ts",
+  "files.readonlyInclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "files.watcherExclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "search.exclude": {
+    "**/routeTree.gen.ts": true
+  },
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
   "editor.codeActionsOnSave": {
