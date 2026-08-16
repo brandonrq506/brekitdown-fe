@@ -1,3 +1,4 @@
+import App from "@/App";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -11,14 +12,9 @@ function Index() {
         <Link to="/" className="[&.active]:font-bold">
           Home
         </Link>{" "}
-        <Link to="/about" className="[&.active]:font-bold">
-          About
-        </Link>
       </div>
       <hr />
-      <div className="p-2">
-        <h3>Welcome Home Brandon!</h3>
-      </div>
+      <App />
     </div>
   );
 }

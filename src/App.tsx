@@ -11,7 +11,8 @@ function App() {
       const { data } = await api.get(GOALS_ENDPOINT, {
         signal: context.signal,
       });
-      return data;
+
+      return data.data;
     },
   });
 
