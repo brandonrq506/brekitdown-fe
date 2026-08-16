@@ -1,21 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ThemeToggle } from "./features/theme/components/ThemeToggle";
 import { api, GOALS_ENDPOINT } from "./libs/axios";
+import { useQuery, type QueryFunctionContext } from "@tanstack/react-query";
 
 function App() {
   const [count, setCount] = useState(0);
-  const [goals, setGoals] = useState<any[]>([]);
-
-  useEffect(() => {
-    const fetchGoals = async () => {
-      const response = await api.get(GOALS_ENDPOINT);
-      return response.data;
-    };
-
-    fetchGoals()
-      .then(setGoals)
-      .catch((error) => console.error("Error fetching goals:", error));
-  }, []);
+  const { data, isPending, isError, isSuccess } = useQuery({
+    queryKey: [GOALS_ENDPOINT],
+    queryFn: async (context: QueryFunctionContext) => {
+      const { data } = await api.get(GOALS_ENDPOINT, {
+        signal: context.signal,
+      });
+      return data;
+    },
+  });
 
   return (
     <main className="mx-auto flex min-h-svh w-full max-w-5xl flex-col items-center justify-center gap-6 border-x px-6 text-center">
@@ -34,7 +32,10 @@ function App() {
       >
         Count is {count}
       </button>
-      <p className="text-sm">{goals.length} goals loaded</p>
+
+      {isPending && <p className="text-sm">Loading goals...</p>}
+      {isError && <p className="text-sm text-red-500">Error loading goals</p>}
+      {isSuccess && <p className="text-sm">{data.length} goals loaded</p>}
       <ThemeToggle />
     </main>
   );
