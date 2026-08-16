@@ -12,11 +12,13 @@ export default defineConfig({
     "*": "vp check --fix",
   },
   fmt: {
+    ignorePatterns: ["src/routeTree.gen.ts"],
     sortTailwindcss: {
       stylesheet: "./src/index.css",
     },
   },
   lint: {
+    ignorePatterns: ["src/routeTree.gen.ts"],
     plugins: ["react", "typescript", "oxc"],
     rules: {
       "react/rules-of-hooks": "error",
