@@ -1,4 +1,5 @@
 import { defineConfig, lazyPlugins } from "vite-plus";
+import { devtools } from "@tanstack/devtools-vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
@@ -49,7 +50,13 @@ export default defineConfig({
       },
     ],
   },
+
+  /*
+    - `devtools()` must be the first plugin in the list.
+    - `tanstackRouter()` must be declared before `react()`.
+  */
   plugins: lazyPlugins(() => [
+    devtools(),
     tanstackRouter({
       target: "react",
       autoCodeSplitting: true,
