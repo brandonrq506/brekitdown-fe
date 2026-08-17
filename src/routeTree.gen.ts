@@ -9,50 +9,93 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./routes/__root";
-import { Route as IndexRouteImport } from "./routes/index";
+import { Route as _protectedRouteRouteImport } from "./routes/__protected/route";
+import { Route as _protectedIndexRouteImport } from "./routes/__protected/index";
+import { Route as _protectedGoalsIndexRouteImport } from "./routes/__protected/goals/index";
 
-const IndexRoute = IndexRouteImport.update({
+const _protectedRouteRoute = _protectedRouteRouteImport.update({
+  id: "/__protected",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const _protectedIndexRoute = _protectedIndexRouteImport.update({
   id: "/",
   path: "/",
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => _protectedRouteRoute,
+} as any);
+const _protectedGoalsIndexRoute = _protectedGoalsIndexRouteImport.update({
+  id: "/goals/",
+  path: "/goals/",
+  getParentRoute: () => _protectedRouteRoute,
 } as any);
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
+  "/": typeof _protectedIndexRoute;
+  "/goals/": typeof _protectedGoalsIndexRoute;
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
+  "/": typeof _protectedIndexRoute;
+  "/goals": typeof _protectedGoalsIndexRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
+  "/__protected": typeof _protectedRouteRouteWithChildren;
+  "/__protected/": typeof _protectedIndexRoute;
+  "/__protected/goals/": typeof _protectedGoalsIndexRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/";
+  fullPaths: "/" | "/goals/";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/";
-  id: "__root__" | "/";
+  to: "/" | "/goals";
+  id: "__root__" | "/__protected" | "/__protected/" | "/__protected/goals/";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
+  _protectedRouteRoute: typeof _protectedRouteRouteWithChildren;
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    "/": {
-      id: "/";
+    "/__protected": {
+      id: "/__protected";
+      path: "";
+      fullPath: "/";
+      preLoaderRoute: typeof _protectedRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/__protected/": {
+      id: "/__protected/";
       path: "/";
       fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
+      preLoaderRoute: typeof _protectedIndexRouteImport;
+      parentRoute: typeof _protectedRouteRoute;
+    };
+    "/__protected/goals/": {
+      id: "/__protected/goals/";
+      path: "/goals";
+      fullPath: "/goals/";
+      preLoaderRoute: typeof _protectedGoalsIndexRouteImport;
+      parentRoute: typeof _protectedRouteRoute;
     };
   }
 }
 
+interface _protectedRouteRouteChildren {
+  _protectedIndexRoute: typeof _protectedIndexRoute;
+  _protectedGoalsIndexRoute: typeof _protectedGoalsIndexRoute;
+}
+
+const _protectedRouteRouteChildren: _protectedRouteRouteChildren = {
+  _protectedIndexRoute: _protectedIndexRoute,
+  _protectedGoalsIndexRoute: _protectedGoalsIndexRoute,
+};
+
+const _protectedRouteRouteWithChildren = _protectedRouteRoute._addFileChildren(
+  _protectedRouteRouteChildren,
+);
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  _protectedRouteRoute: _protectedRouteRouteWithChildren,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
