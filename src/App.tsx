@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { ThemeToggle } from "./features/theme/components/ThemeToggle";
 import { GOALS_ENDPOINT } from "./libs/axios";
-import { getGoals } from "./features/goals/api/getGoals";
+import { getGoals } from "./features/goals/api/axios/getGoals";
 
 function App() {
   const [count, setCount] = useState(0);
