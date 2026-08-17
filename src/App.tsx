@@ -1,19 +1,15 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+
 import { ThemeToggle } from "./features/theme/components/ThemeToggle";
-import { api, GOALS_ENDPOINT } from "./libs/axios";
-import { useQuery, type QueryFunctionContext } from "@tanstack/react-query";
+import { GOALS_ENDPOINT } from "./libs/axios";
+import { getGoals } from "./features/goals/api/axios/getGoals";
 
 function App() {
   const [count, setCount] = useState(0);
   const { data, isPending, isError, isSuccess } = useQuery({
     queryKey: [GOALS_ENDPOINT],
-    queryFn: async (context: QueryFunctionContext) => {
-      const { data } = await api.get(GOALS_ENDPOINT, {
-        signal: context.signal,
-      });
-
-      return data.data;
-    },
+    queryFn: getGoals,
   });
 
   return (
@@ -36,7 +32,7 @@ function App() {
 
       {isPending && <p className="text-sm">Loading goals...</p>}
       {isError && <p className="text-sm text-red-500">Error loading goals</p>}
-      {isSuccess && <p className="text-sm">{data.length} goals loaded</p>}
+      {isSuccess && <p className="text-sm">{data.data.length} goals loaded</p>}
       <ThemeToggle />
     </main>
   );
