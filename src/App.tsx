@@ -1,16 +1,12 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
+import { goalQueries } from "./features/goals/api/queries";
 import { ThemeToggle } from "./features/theme/components/ThemeToggle";
-import { GOALS_ENDPOINT } from "./libs/axios";
-import { getGoals } from "./features/goals/api/axios/getGoals";
 
 function App() {
   const [count, setCount] = useState(0);
-  const { data, isPending, isError, isSuccess } = useQuery({
-    queryKey: [GOALS_ENDPOINT],
-    queryFn: getGoals,
-  });
+  const { data, isPending, isError, isSuccess } = useQuery(goalQueries.list());
 
   return (
     <main className="mx-auto flex min-h-svh w-full max-w-5xl flex-col items-center justify-center gap-6 border-x px-6 text-center">
