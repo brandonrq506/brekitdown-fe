@@ -1,12 +1,9 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 
-import { goalQueries } from "./features/goals/api/queries";
 import { ThemeToggle } from "./features/theme/components/ThemeToggle";
 
 function App() {
   const [count, setCount] = useState(0);
-  const { data, isPending, isError, isSuccess } = useQuery(goalQueries.list());
 
   return (
     <main className="mx-auto flex min-h-svh w-full max-w-5xl flex-col items-center justify-center gap-6 border-x px-6 text-center">
@@ -26,9 +23,6 @@ function App() {
         Count is {count}
       </button>
 
-      {isPending && <p className="text-sm">Loading goals...</p>}
-      {isError && <p className="text-sm text-red-500">Error loading goals</p>}
-      {isSuccess && <p className="text-sm">{data.data.length} goals loaded</p>}
       <ThemeToggle />
     </main>
   );
