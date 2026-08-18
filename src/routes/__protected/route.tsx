@@ -23,7 +23,6 @@ function RouteComponent() {
         </nav>
       </header>
       <Outlet />
-      <TanStackDevtoolsWrapper />
     </div>
   );
 }
