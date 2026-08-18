@@ -5,7 +5,7 @@ import { goalQueries } from "@/features/goals/api/queries";
 
 const goalsQueryOptions = goalQueries.list();
 
-export const Route = createFileRoute("/__protected/goals/")({
+export const Route = createFileRoute("/_protected/goals/")({
   loader: async ({ context: { queryClient } }) => {
     await queryClient.ensureQueryData(goalsQueryOptions);
   },
