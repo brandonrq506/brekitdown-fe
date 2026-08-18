@@ -1,4 +1,3 @@
-import { TanStackDevtoolsWrapper } from "@/libs/tanstack-devtools";
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/__protected")({
