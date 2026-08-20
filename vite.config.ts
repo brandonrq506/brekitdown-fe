@@ -26,6 +26,7 @@ export default defineConfig({
     clearMocks: true,
     unstubEnvs: true,
     unstubGlobals: true,
+    setupFiles: ["./src/test/setup.ts"],
   },
   lint: {
     ignorePatterns: ["src/routeTree.gen.ts"],
