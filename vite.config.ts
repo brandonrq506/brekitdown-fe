@@ -18,6 +18,15 @@ export default defineConfig({
       stylesheet: "./src/index.css",
     },
   },
+  test: {
+    // React Testing Library uses the global afterEach hook for automatic cleanup.
+    globals: true,
+    // Vitest defaults to Node, which does not provide document or window.
+    environment: "jsdom",
+    clearMocks: true,
+    unstubEnvs: true,
+    unstubGlobals: true,
+  },
   lint: {
     ignorePatterns: ["src/routeTree.gen.ts"],
     plugins: ["react", "typescript", "oxc"],
