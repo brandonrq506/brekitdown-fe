@@ -7,5 +7,7 @@ function SetupProbe() {
 it("renders a React component", () => {
   render(<SetupProbe />);
 
-  expect(screen.getByRole("heading", { name: "React Testing Library is ready" })).toBeTruthy();
+  expect(
+    screen.getByRole("heading", { name: "React Testing Library is ready" }),
+  ).toBeInTheDocument();
 });
