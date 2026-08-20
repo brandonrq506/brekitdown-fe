@@ -23,6 +23,9 @@ export default defineConfig({
     globals: true,
     // Vitest defaults to Node, which does not provide document or window.
     environment: "jsdom",
+    clearMocks: true,
+    unstubEnvs: true,
+    unstubGlobals: true,
   },
   lint: {
     ignorePatterns: ["src/routeTree.gen.ts"],
