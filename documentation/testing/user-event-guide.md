@@ -46,7 +46,8 @@ Note: Use `fireEvent` only when `user-event` does not support the required inter
 
 Resolve action targets with accessible, user-facing queries. Prefer `screen.getByRole()` with an accessible name, followed by label-based queries for form controls. This keeps the interaction tied to the same interface that keyboard and assistive-technology users receive.
 
-⚠️ ⚠️ ⚠️ The text above should be removed once the guides for `react-testing-library` are in. Those will include more in-depth guidelines for useing the proper queries. ⚠️ ⚠️ ⚠️
+See the [React Testing Library guidelines](./react-testing-library-guide.md) for the
+complete query priority, accessibility contract, and asynchronous query rules.
 
 ## Preserve realistic defaults
 
