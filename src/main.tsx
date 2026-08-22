@@ -8,6 +8,7 @@ import { routeTree } from "./routeTree.gen";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { createQueryClient } from "./libs/tanstack-query";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "@/features/theme/providers/ThemeProvider";
 
 const queryClient = createQueryClient();
 
@@ -35,6 +36,8 @@ declare module "@tanstack/react-router" {
 // Render the app
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </StrictMode>,
 );
