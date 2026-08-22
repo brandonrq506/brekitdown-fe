@@ -7,8 +7,8 @@ const OPTIONS: { value: THEME; label: string }[] = [
   { value: THEME.DARK, label: THEME.DARK },
 ];
 
-const SELECTED = "bg-accent/10 text-accent rounded px-3 py-1 text-sm";
-const UNSELECTED = "hover:text-heading rounded px-3 py-1 text-sm";
+const SELECTED = "bg-primary/10 text-primary rounded px-3 py-1 text-sm";
+const UNSELECTED = "hover:text-foreground rounded px-3 py-1 text-sm";
 
 export function ThemeToggle() {
   const { theme, setTheme, resolvedTheme } = useTheme();
@@ -29,8 +29,8 @@ export function ThemeToggle() {
         ))}
       </div>
       <p className="text-xs">
-        stored: <code className="rounded bg-code px-1 py-0.5 font-mono">{theme}</code> · showing:{" "}
-        <code className="rounded bg-code px-1 py-0.5 font-mono">{resolvedTheme}</code>
+        stored: <code className="rounded bg-muted px-1 py-0.5 font-mono">{theme}</code> · showing:{" "}
+        <code className="rounded bg-muted px-1 py-0.5 font-mono">{resolvedTheme}</code>
       </p>
     </div>
   );

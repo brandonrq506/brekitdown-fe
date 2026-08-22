@@ -12,11 +12,11 @@ function RouteComponent() {
           <Link
             to="/"
             activeOptions={{ exact: true }}
-            className="[&.active]:font-bold [&.active]:text-heading"
+            className="[&.active]:font-bold [&.active]:text-foreground"
           >
             Home
           </Link>
-          <Link to="/goals" className="[&.active]:font-bold [&.active]:text-heading">
+          <Link to="/goals" className="[&.active]:font-bold [&.active]:text-foreground">
             Goals
           </Link>
         </nav>
