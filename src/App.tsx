@@ -1,7 +1,5 @@
 import { useState } from "react";
 
-import { ThemeToggle } from "./features/theme/components/ThemeToggle";
-
 function App() {
   const [count, setCount] = useState(0);
 
@@ -22,8 +20,6 @@ function App() {
       >
         Count is {count}
       </button>
-
-      <ThemeToggle />
     </main>
   );
 }
