@@ -5,6 +5,7 @@ import { ThemeToggle } from "../components/ThemeToggle";
 import { DARK_QUERY, THEME_STORAGE_KEY } from "../constants/theme";
 import { ThemeProvider } from "./ThemeProvider";
 import { render, screen, waitFor } from "@/test/test-utils";
+import { THEME_LABELS } from "../types/theme";
 
 function renderTheme() {
   return render(
@@ -12,6 +13,28 @@ function renderTheme() {
       <ThemeToggle />
     </ThemeProvider>,
   );
+}
+
+async function openThemeMenu(user: ReturnType<typeof userEvent.setup>) {
+  screen.getByRole("button", { name: "Change color theme" }).focus();
+  await user.keyboard("{ArrowDown}");
+}
+
+async function expectSelectedTheme(user: ReturnType<typeof userEvent.setup>, theme: THEME_LABELS) {
+  await openThemeMenu(user);
+  expect(await screen.findByRole("menuitemradio", { name: theme })).toHaveAttribute(
+    "aria-checked",
+    "true",
+  );
+  await user.keyboard("{Escape}");
+}
+
+async function selectTheme(user: ReturnType<typeof userEvent.setup>, theme: THEME_LABELS) {
+  await openThemeMenu(user);
+  await user.click(await screen.findByRole("menuitemradio", { name: theme }));
+  await waitFor(() => {
+    expect(screen.queryByRole("menuitemradio", { name: theme })).not.toBeInTheDocument();
+  });
 }
 
 function installMatchMedia(initialMatches: boolean) {
@@ -59,12 +82,13 @@ afterEach(() => {
 });
 
 it("treats a missing storage key as system and follows live OS changes", async () => {
+  const user = userEvent.setup();
   const media = installMatchMedia(false);
 
   renderTheme();
 
   await waitFor(() => expect(document.documentElement).toHaveClass("light"));
-  expect(screen.getByRole("button", { name: "system" })).toHaveAttribute("aria-pressed", "true");
+  await expectSelectedTheme(user, THEME_LABELS.SYSTEM);
   expect(localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
 
   act(() => media.setMatches(true));
@@ -82,9 +106,9 @@ it("persists explicit choices and removes the key when returning to system", asy
   renderTheme();
 
   await waitFor(() => expect(document.documentElement).toHaveClass("dark"));
-  expect(screen.getByRole("button", { name: "dark" })).toHaveAttribute("aria-pressed", "true");
+  await expectSelectedTheme(user, THEME_LABELS.DARK);
 
-  await user.click(screen.getByRole("button", { name: "light" }));
+  await selectTheme(user, THEME_LABELS.LIGHT);
 
   await waitFor(() => expect(document.documentElement).toHaveClass("light"));
   expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe("light");
@@ -93,14 +117,15 @@ it("persists explicit choices and removes the key when returning to system", asy
   act(() => media.setMatches(true));
   expect(document.documentElement).toHaveClass("light");
 
-  await user.click(screen.getByRole("button", { name: "system" }));
+  await selectTheme(user, THEME_LABELS.SYSTEM);
 
   await waitFor(() => expect(document.documentElement).toHaveClass("dark"));
   expect(localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
-  expect(screen.getByRole("button", { name: "system" })).toHaveAttribute("aria-pressed", "true");
+  await expectSelectedTheme(user, THEME_LABELS.SYSTEM);
 });
 
 it("falls back from invalid storage and follows theme changes from another tab", async () => {
+  const user = userEvent.setup();
   installMatchMedia(false);
   localStorage.setItem(THEME_STORAGE_KEY, "sepia");
 
@@ -114,12 +139,12 @@ it("falls back from invalid storage and follows theme changes from another tab",
   });
 
   await waitFor(() => expect(document.documentElement).toHaveClass("dark"));
-  expect(screen.getByRole("button", { name: "dark" })).toHaveAttribute("aria-pressed", "true");
+  await expectSelectedTheme(user, THEME_LABELS.DARK);
 
   act(() => {
     window.dispatchEvent(new StorageEvent("storage", { key: THEME_STORAGE_KEY, newValue: null }));
   });
 
   await waitFor(() => expect(document.documentElement).toHaveClass("light"));
-  expect(screen.getByRole("button", { name: "system" })).toHaveAttribute("aria-pressed", "true");
+  await expectSelectedTheme(user, THEME_LABELS.SYSTEM);
 });
