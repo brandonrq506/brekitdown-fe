@@ -6,7 +6,7 @@ export const THEME = {
   SYSTEM: "system",
 } as const;
 
-/** `system` means "no `data-theme` attribute" — the CSS falls back to `prefers-color-scheme`. */
+/** `system` follows `prefers-color-scheme`; the provider applies the resolved root class. */
 export type THEME = ObjectValues<typeof THEME>;
 
 /** What is actually on screen, with `system` collapsed to a concrete value. */

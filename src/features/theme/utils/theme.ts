@@ -49,19 +49,16 @@ export const persistTheme = (theme: THEME) => {
 };
 
 /**
- * Writes the choice to `<html>` as `data-theme`.
+ * Replaces the concrete theme class on `<html>` and keeps native controls in sync.
  *
- * `THEME.SYSTEM` removes the attribute, handing control back to the
- * `prefers-color-scheme` media query in index.css.
- *
- * @param theme - The theme to apply.
+ * @param theme - The resolved light or dark theme to apply.
  */
-export const applyTheme = (theme: THEME) => {
-  if (theme === THEME.SYSTEM) {
-    document.documentElement.removeAttribute("data-theme");
-  } else {
-    document.documentElement.setAttribute("data-theme", theme);
-  }
+export const applyTheme = (theme: ResolvedTheme) => {
+  const root = document.documentElement;
+
+  root.classList.remove(THEME.LIGHT, THEME.DARK);
+  root.classList.add(theme);
+  root.style.colorScheme = theme;
 };
 
 /**
