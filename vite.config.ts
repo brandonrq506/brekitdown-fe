@@ -23,6 +23,8 @@ export default defineConfig({
     globals: true,
     // Vitest defaults to Node, which does not provide document or window.
     environment: "jsdom",
+    // Temporary solution, disables Node’s experimental global storage. Should be removed once it's fixed.
+    execArgv: ["--no-experimental-webstorage"],
     clearMocks: true,
     unstubEnvs: true,
     unstubGlobals: true,
