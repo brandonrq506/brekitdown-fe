@@ -5,19 +5,28 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>brekitdown-fe</title>
-    <!-- Applies a stored theme before first paint. Without this, the page
-         renders at the OS preference and then snaps to the saved choice.
-         Must stay in sync with THEME_STORAGE_KEY in src/features/theme/constants/theme.ts. -->
+    <!-- Applies the resolved theme before first paint. Must stay in sync with
+         THEME_STORAGE_KEY in src/features/theme/constants/theme.ts. -->
     <script>
       (function () {
+        let resolvedTheme;
+
         try {
-          var stored = localStorage.getItem("theme");
-          if (stored === "light" || stored === "dark") {
-            document.documentElement.setAttribute("data-theme", stored);
-          }
+          resolvedTheme = localStorage.getItem("theme");
         } catch {
-          /* private mode / storage disabled — fall back to prefers-color-scheme */
+          /* Storage unavailable — continue with the system preference. */
         }
+
+        if (resolvedTheme !== "light" && resolvedTheme !== "dark") {
+          resolvedTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        }
+
+        const root = document.documentElement;
+
+        root.classList.add(resolvedTheme);
+        root.style.colorScheme = resolvedTheme;
       })();
     </script>
   </head>
