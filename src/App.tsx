@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { Button } from "@/components/ui/button";
+
 function App() {
   const [count, setCount] = useState(0);
 
@@ -13,13 +15,7 @@ function App() {
         </code>{" "}
         and save to test HMR
       </p>
-      <button
-        type="button"
-        onClick={() => setCount((count) => count + 1)}
-        className="rounded border px-4 py-2 font-mono text-foreground hover:border-primary hover:text-primary"
-      >
-        Count is {count}
-      </button>
+      <Button onClick={() => setCount((count) => count + 1)}>Count is {count}</Button>
     </main>
   );
 }
