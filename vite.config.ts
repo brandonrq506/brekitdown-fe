@@ -33,6 +33,9 @@ export default defineConfig({
   lint: {
     ignorePatterns: ["src/routeTree.gen.ts"],
     plugins: ["react", "typescript", "oxc"],
+    categories: {
+      correctness: "error",
+    },
     rules: {
       "react/rules-of-hooks": "error",
       "react/only-export-components": [
@@ -76,6 +79,6 @@ export default defineConfig({
       semicolons: true,
     }),
     tailwindcss(),
-    react(),
+    react({ compiler: true }),
   ]),
 });
