@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from "./routes/__root";
 import { Route as ProtectedRouteRouteImport } from "./routes/_protected/route";
 import { Route as ProtectedIndexRouteImport } from "./routes/_protected/index";
 import { Route as ProtectedGoalsIndexRouteImport } from "./routes/_protected/goals/index";
+import { Route as ProtectedGoalsGoalIdIndexRouteImport } from "./routes/_protected/goals/$goalId/index";
 
 const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
   id: "/_protected",
@@ -27,27 +28,41 @@ const ProtectedGoalsIndexRoute = ProtectedGoalsIndexRouteImport.update({
   path: "/goals/",
   getParentRoute: () => ProtectedRouteRoute,
 } as any);
+const ProtectedGoalsGoalIdIndexRoute =
+  ProtectedGoalsGoalIdIndexRouteImport.update({
+    id: "/goals/$goalId/",
+    path: "/goals/$goalId/",
+    getParentRoute: () => ProtectedRouteRoute,
+  } as any);
 
 export interface FileRoutesByFullPath {
   "/": typeof ProtectedIndexRoute;
   "/goals/": typeof ProtectedGoalsIndexRoute;
+  "/goals/$goalId/": typeof ProtectedGoalsGoalIdIndexRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof ProtectedIndexRoute;
   "/goals": typeof ProtectedGoalsIndexRoute;
+  "/goals/$goalId": typeof ProtectedGoalsGoalIdIndexRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/_protected": typeof ProtectedRouteRouteWithChildren;
   "/_protected/": typeof ProtectedIndexRoute;
   "/_protected/goals/": typeof ProtectedGoalsIndexRoute;
+  "/_protected/goals/$goalId/": typeof ProtectedGoalsGoalIdIndexRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/goals/";
+  fullPaths: "/" | "/goals/" | "/goals/$goalId/";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/goals";
-  id: "__root__" | "/_protected" | "/_protected/" | "/_protected/goals/";
+  to: "/" | "/goals" | "/goals/$goalId";
+  id:
+    | "__root__"
+    | "/_protected"
+    | "/_protected/"
+    | "/_protected/goals/"
+    | "/_protected/goals/$goalId/";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
@@ -77,17 +92,26 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof ProtectedGoalsIndexRouteImport;
       parentRoute: typeof ProtectedRouteRoute;
     };
+    "/_protected/goals/$goalId/": {
+      id: "/_protected/goals/$goalId/";
+      path: "/goals/$goalId";
+      fullPath: "/goals/$goalId/";
+      preLoaderRoute: typeof ProtectedGoalsGoalIdIndexRouteImport;
+      parentRoute: typeof ProtectedRouteRoute;
+    };
   }
 }
 
 interface ProtectedRouteRouteChildren {
   ProtectedIndexRoute: typeof ProtectedIndexRoute;
   ProtectedGoalsIndexRoute: typeof ProtectedGoalsIndexRoute;
+  ProtectedGoalsGoalIdIndexRoute: typeof ProtectedGoalsGoalIdIndexRoute;
 }
 
 const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
   ProtectedIndexRoute: ProtectedIndexRoute,
   ProtectedGoalsIndexRoute: ProtectedGoalsIndexRoute,
+  ProtectedGoalsGoalIdIndexRoute: ProtectedGoalsGoalIdIndexRoute,
 };
 
 const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
