@@ -11,6 +11,13 @@ export const Route = createFileRoute("/_protected/goals/")({
     await queryClient.ensureQueryData(goalsQueryOptions);
   },
   component: RouteComponent,
+  head: () => ({
+    meta: [
+      {
+        title: "Goals | Brekitdown",
+      },
+    ],
+  }),
 });
 
 function RouteComponent() {
