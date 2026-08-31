@@ -35,7 +35,7 @@ const goalsQueryOptions = goalQueries.list();
 
 export const Route = createFileRoute("/goals")({
   loader: async ({ context: { queryClient } }) => {
-    await queryClient.ensureQueryData(goalsQueryOptions);
+    await queryClient.ensureInfiniteQueryData(goalsQueryOptions);
   },
   component: Goals,
 });
