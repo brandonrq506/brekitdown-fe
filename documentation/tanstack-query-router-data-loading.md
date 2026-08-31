@@ -9,13 +9,15 @@ TanStack Router should coordinate when route data starts loading. TanStack Query
 Keep the query key and query function in a feature-level factory. The same options must be used by the route loader and the component so both read and write the same cache entry.
 
 ```ts
-import { queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions } from "@tanstack/react-query";
 
 export const goalQueries = {
   list: () =>
-    queryOptions({
-      queryKey: [{ feature: "goals", entity: "list" }],
+    infiniteQueryOptions({
+      queryKey: [{ feature: "goals", entity: "list", pageSize: 20 }],
       queryFn: getGoals,
+      initialPageParam: 1,
+      getNextPageParam: (lastPage) => lastPage.meta.next_page ?? undefined,
     }),
 };
 ```
