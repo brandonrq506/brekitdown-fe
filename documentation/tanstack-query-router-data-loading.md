@@ -51,9 +51,11 @@ For stale cached data, `ensureQueryData` returns it by default. The mounted quer
 
 ```ts
 function Goals() {
-  const { data } = useSuspenseQuery(goalsQueryOptions);
+  const { data } = useSuspenseInfiniteQuery(goalsQueryOptions);
 
-  return <p>{data.data.length} goals loaded</p>;
+  const goals = data.pages.flatMap((page) => page.data);
+
+  return <p>{goals.length} goals loaded</p>;
 }
 ```
 
