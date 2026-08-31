@@ -1,4 +1,5 @@
 import type { ApiResource } from "@/types/core/helpers";
+import type { PaginatedResponse } from "@/types/pagination";
 
 // TODO: Migration so that `description` is not nullable, default to '' and then update these types.
 export interface Goal extends ApiResource {
@@ -10,9 +11,7 @@ export interface GoalResponse {
   data: Goal;
 }
 
-export interface GoalsResponse {
-  data: Goal[];
-}
+export type GoalsResponse = PaginatedResponse<Goal>;
 
 type GoalPayload = {
   goal: {
