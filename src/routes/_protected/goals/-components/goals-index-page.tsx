@@ -31,7 +31,7 @@ export function GoalsIndexPage() {
         <Button
           className="self-center"
           variant="outline"
-          disabled={isFetching}
+          disabled={isFetchingNextPage}
           onClick={() => void fetchNextPage()}
         >
           {isFetchingNextPage ? "Loading…" : isFetchNextPageError ? "Try again" : "Load more"}
