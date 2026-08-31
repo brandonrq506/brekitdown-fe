@@ -9,6 +9,6 @@ export const updateGoalMutation = (queryClient: QueryClient) =>
     onSuccess: (response, { referenceXid }) => {
       queryClient.setQueryData(goalKeys.detail(referenceXid), response);
 
-      return queryClient.invalidateQueries({ queryKey: goalKeys.all });
+      return queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
     },
   });
