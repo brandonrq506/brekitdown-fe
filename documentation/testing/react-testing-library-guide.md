@@ -41,6 +41,15 @@ be appropriate when that callback is the public contract of a small component, b
 not inspect React component instances, private state, child implementation details, or
 hook call counts. React Testing Library does not provide shallow rendering.
 
+## Test application-owned behavior
+
+- Give each test one product or domain behavior and assert only the evidence needed
+  to prove it. Multiple assertions are fine when they describe one outcome.
+- Split behaviors that can fail independently. Acceptance criteria define coverage,
+  not test-case boundaries; a test name containing "and" is a prompt to reconsider.
+- Exercise dependencies through the real UI, but do not re-test their documented
+  defaults. Test the configuration, transformation, policy, or integration we add.
+
 ## Choose both the query type and the query target
 
 Every query has two parts:
