@@ -88,14 +88,12 @@ export const CreateGoalDialog = () => {
   const onSubmit: SubmitHandler<CreateGoalFormValues> = async (values) => {
     clearErrors();
 
-    const description = values.description.trim();
-
     let response;
     try {
       response = await createGoal.mutateAsync({
         goal: {
           name: values.name.trim(),
-          description: description || null,
+          description: values.description.trim() || null,
         },
       });
     } catch (error) {
