@@ -88,23 +88,21 @@ export const CreateGoalDialog = () => {
   const onSubmit: SubmitHandler<CreateGoalFormValues> = async (values) => {
     clearErrors();
 
-    let response;
     try {
-      response = await createGoal.mutateAsync({
+      const response = await createGoal.mutateAsync({
         goal: {
           name: values.name.trim(),
           description: values.description.trim() || null,
         },
       });
+
+      await navigate({
+        to: "/goals/$goalId",
+        params: { goalId: response.data.reference_xid },
+      });
     } catch (error) {
       setSubmissionError(error);
-      return;
     }
-
-    await navigate({
-      to: "/goals/$goalId",
-      params: { goalId: response.data.reference_xid },
-    });
   };
 
   return (
