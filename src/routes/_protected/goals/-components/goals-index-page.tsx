@@ -2,12 +2,13 @@ import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
 import { goalQueries } from "@/features/goals/api/queries";
+import { CreateGoalDialog } from "@/features/goals/components/create-goal-dialog";
 import { GoalsGrid } from "@/features/goals/components/goals-grid";
 
 const goalsQueryOptions = goalQueries.list();
 
 export function GoalsIndexPage() {
-  const { data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, isFetchNextPageError } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetchNextPageError } =
     useSuspenseInfiniteQuery(goalsQueryOptions);
 
   const goals = data.pages.flatMap((page) => page.data);
@@ -15,11 +16,14 @@ export function GoalsIndexPage() {
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-10">
-      <header className="space-y-2">
-        <h1 className="text-4xl font-medium tracking-tight text-foreground">Goals</h1>
-        <p className="text-sm text-muted-foreground">
-          {totalCount} {totalCount === 1 ? "goal" : "goals"}
-        </p>
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-2">
+          <h1 className="text-4xl font-medium tracking-tight text-foreground">Goals</h1>
+          <p className="text-sm text-muted-foreground">
+            {totalCount} {totalCount === 1 ? "goal" : "goals"}
+          </p>
+        </div>
+        <CreateGoalDialog />
       </header>
       <GoalsGrid goals={goals} />
       {isFetchNextPageError && (

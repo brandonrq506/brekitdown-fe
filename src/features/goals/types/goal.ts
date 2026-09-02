@@ -11,6 +11,11 @@ export interface GoalResponse {
   data: Goal;
 }
 
+export interface CreateGoalFormValues {
+  name: string;
+  description: string;
+}
+
 export type GoalsResponse = PaginatedResponse<Goal>;
 
 type GoalPayload = {

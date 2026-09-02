@@ -7,8 +7,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-export const TestProviders = ({ children }: Props) => {
-  // TODO: Verify if the lib/tanstack-query #createQueryClient is a better approach.
+export const createTestProviders = (initialEntries: string[] = ["/"]) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -19,14 +18,16 @@ export const TestProviders = ({ children }: Props) => {
 
   const router = createRouter({
     routeTree,
-    history: createMemoryHistory({ initialEntries: ["/"] }),
+    history: createMemoryHistory({ initialEntries }),
     context: { queryClient },
     defaultPreload: false,
   });
 
-  return (
+  const TestProviders = ({ children }: Props) => (
     <QueryClientProvider client={queryClient}>
       <RouterContextProvider router={router}>{children}</RouterContextProvider>
     </QueryClientProvider>
   );
+
+  return { queryClient, router, TestProviders };
 };
