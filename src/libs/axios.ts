@@ -1,4 +1,5 @@
 import axios from "axios";
+import { HTTP_STATUS } from "@/constants/http";
 
 export type ApiValidationErrors = Record<string, string[]>;
 
@@ -16,7 +17,10 @@ const isApiValidationErrors = (value: unknown): value is ApiValidationErrors => 
 };
 
 export const getApiValidationErrors = (error: unknown): ApiValidationErrors | null => {
-  if (!axios.isAxiosError<ApiValidationErrorResponse>(error) || error.response?.status !== 422) {
+  if (
+    !axios.isAxiosError<ApiValidationErrorResponse>(error) ||
+    error.response?.status !== HTTP_STATUS.UNPROCESSABLE_ENTITY
+  ) {
     return null;
   }
 
