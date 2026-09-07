@@ -47,3 +47,4 @@ export const api = axios.create({
 });
 
 export const GOALS_ENDPOINT = "/goals";
+export const TASKS_ENDPOINT = "/tasks";
