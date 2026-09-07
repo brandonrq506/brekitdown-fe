@@ -5,7 +5,7 @@ import { goalQueries } from "@/features/goals/api/queries";
 
 export const Route = createFileRoute("/_protected/goals/$goalId/")({
   component: RouteComponent,
-  loader: async ({ context: { queryClient }, params: { goalId } }) =>
+  loader: ({ context: { queryClient }, params: { goalId } }) =>
     queryClient.ensureQueryData(goalQueries.detail(goalId)),
   head: ({ loaderData }) => ({
     meta: [
