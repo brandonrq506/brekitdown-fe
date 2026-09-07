@@ -7,6 +7,13 @@ import { GoalsGrid } from "@/features/goals/components/goals-grid";
 
 const goalsQueryOptions = goalQueries.list();
 
+function getLoadMoreLabel(isFetchingNextPage: boolean, isFetchNextPageError: boolean) {
+  if (isFetchingNextPage) return "Loading…";
+  if (isFetchNextPageError) return "Try again";
+
+  return "Load more";
+}
+
 export function GoalsIndexPage() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetchNextPageError } =
     useSuspenseInfiniteQuery(goalsQueryOptions);
@@ -38,7 +45,7 @@ export function GoalsIndexPage() {
           disabled={isFetchingNextPage}
           onClick={() => void fetchNextPage()}
         >
-          {isFetchingNextPage ? "Loading…" : isFetchNextPageError ? "Try again" : "Load more"}
+          {getLoadMoreLabel(isFetchingNextPage, isFetchNextPageError)}
         </Button>
       )}
       {!hasNextPage && goals.length > 0 && (

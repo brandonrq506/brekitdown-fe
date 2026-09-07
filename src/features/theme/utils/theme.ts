@@ -110,5 +110,8 @@ export const watchStoredTheme = (onChange: (theme: THEME) => void) => {
  * @param systemPrefersDark - Current OS preference, from {@link prefersDark} or {@link watchPrefersDark}.
  * @returns The concrete theme being rendered right now.
  */
-export const resolveTheme = (theme: THEME, systemPrefersDark: boolean): ResolvedTheme =>
-  theme === THEME.SYSTEM ? (systemPrefersDark ? THEME.DARK : THEME.LIGHT) : theme;
+export const resolveTheme = (theme: THEME, systemPrefersDark: boolean): ResolvedTheme => {
+  if (theme !== THEME.SYSTEM) return theme;
+
+  return systemPrefersDark ? THEME.DARK : THEME.LIGHT;
+};
