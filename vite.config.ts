@@ -19,6 +19,8 @@ export default defineConfig({
     },
   },
   test: {
+    // Date labels resolve against the viewer's zone, so pin one instead of the host machine's.
+    env: { TZ: "UTC" },
     // React Testing Library uses the global afterEach hook for automatic cleanup.
     globals: true,
     // Vitest defaults to Node, which does not provide document or window.
