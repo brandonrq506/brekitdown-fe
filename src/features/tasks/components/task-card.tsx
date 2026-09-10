@@ -4,7 +4,7 @@ import { CalendarIcon } from "lucide-react";
 import { TASK_STATUS_PRESENTATION } from "../constants/task-status-presentation";
 import type { Task } from "../types/task";
 import { TaskDate } from "./task-date";
-import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface Props {
   task: Task;
@@ -12,6 +12,7 @@ interface Props {
 
 export const TaskCard = ({ task }: Props) => {
   const titleId = useId();
+  const hasDescription = Boolean(task.description.trim());
   const { label, icon: StatusIcon } = TASK_STATUS_PRESENTATION[task.status];
 
   return (
@@ -35,6 +36,13 @@ export const TaskCard = ({ task }: Props) => {
           </h2>
         </CardTitle>
       </CardHeader>
+      {hasDescription && (
+        <CardContent className="px-0 sm:ml-8">
+          <p className="text-sm leading-relaxed wrap-break-word text-muted-foreground">
+            {task.description}
+          </p>
+        </CardContent>
+      )}
       <CardFooter className="mt-auto px-0 sm:ml-8">
         <dl className="flex w-full min-w-0 flex-wrap gap-x-6 gap-y-2 border-t pt-4 text-xs text-muted-foreground">
           <div className="order-last flex flex-wrap gap-x-2 sm:ml-auto">

@@ -16,6 +16,7 @@ export interface TaskTag extends ApiResource {
 
 export interface Task extends ApiResource {
   name: string;
+  description: string;
   status: TASK_STATUS;
   due_at: string | null;
   goal_reference_xid: string | null;
