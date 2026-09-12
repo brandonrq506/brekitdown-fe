@@ -2,8 +2,6 @@ import { TASK_STATUS, type Task } from "../types/task";
 import { TaskCardStartBtn } from "@/routes/_protected/goals/-components/task-card-start-btn";
 import { TaskCardStopBtn } from "@/routes/_protected/goals/-components/task-card-stop-btn";
 
-type TaskActionContext = Pick<Task, "has_children" | "reference_xid" | "status" | "time_entries">;
-
 type Action = {
   taskReferenceXid: string;
 } & (
@@ -18,10 +16,10 @@ type Action = {
 );
 
 interface Props {
-  task: TaskActionContext;
+  task: Task;
 }
 
-const getAction = (task: TaskActionContext): Action | null => {
+const getAction = (task: Task): Action | null => {
   if (task.status === TASK_STATUS.COMPLETED || task.has_children) return null;
 
   const runningTimeEntry = task.time_entries.find((entry) => entry.ended_at === null);
@@ -43,12 +41,9 @@ export const TaskCardCompletedActionsMenu = ({ task }: Props) => {
   return (
     <div className="col-start-2 flex items-center gap-2 sm:col-start-3 sm:row-start-1">
       {action.type === "stop" ? (
-        <TaskCardStopBtn
-          taskReferenceXid={action.taskReferenceXid}
-          entryReferenceXid={action.entryReferenceXid}
-        />
+        <TaskCardStopBtn task={task} entryReferenceXid={action.entryReferenceXid} />
       ) : (
-        <TaskCardStartBtn taskReferenceXid={action.taskReferenceXid} />
+        <TaskCardStartBtn task={task} />
       )}
     </div>
   );
