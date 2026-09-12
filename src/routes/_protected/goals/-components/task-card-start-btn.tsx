@@ -1,18 +1,30 @@
-import { Button } from "@/components/ui/button";
 import { useCreateTimeEntryMutation } from "@/features/time-entries/api/tanstack/use-create-time-entry";
 
+import { Button } from "@/components/ui/button";
+import { goalDetailsPageTasksQueryOptions } from "@/features/tasks/api/queries";
+import type { Task } from "@/features/tasks/types/task";
+
 interface Props {
-  taskReferenceXid: string;
+  task: Task;
 }
 
-export const TaskCardStartBtn = ({ taskReferenceXid }: Props) => {
+export const TaskCardStartBtn = ({ task }: Props) => {
   const { mutate, isPending } = useCreateTimeEntryMutation();
 
   const handleStart = () => {
-    mutate({
-      taskReferenceXid,
-      payload: { time_entry: { started_at: new Date().toISOString() } },
-    });
+    mutate(
+      {
+        taskReferenceXid: task.reference_xid,
+        payload: { time_entry: { started_at: new Date().toISOString() } },
+      },
+      {
+        async onSuccess(_, __, ___, context) {
+          await context.client.invalidateQueries(
+            goalDetailsPageTasksQueryOptions(task.goal_reference_xid),
+          );
+        },
+      },
+    );
   };
 
   return (
