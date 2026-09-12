@@ -1,3 +1,4 @@
+import type { TimeEntry } from "@/features/time-entries/types/time-entry";
 import type { ApiResource, ObjectValues } from "@/types/core/helpers";
 
 export const TASK_STATUS = {
@@ -22,6 +23,7 @@ export interface Task extends ApiResource {
   goal_reference_xid: string | null;
   parent_reference_xid: string | null;
   tags: TaskTag[];
+  time_entries: TimeEntry[];
 }
 
 export interface TasksResponse {
