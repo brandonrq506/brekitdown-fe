@@ -3,6 +3,7 @@ import { CalendarIcon } from "lucide-react";
 
 import { TASK_STATUS_PRESENTATION } from "../constants/task-status-presentation";
 import type { Task } from "../types/task";
+import { TaskCardCompletedActionsMenu } from "./task-card-completed-actions-menu";
 import { TaskDate } from "./task-date";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -21,7 +22,7 @@ export const TaskCard = ({ task }: Props) => {
       aria-labelledby={titleId}
       className="min-h-40 w-full min-w-0 gap-5 p-5 sm:p-6"
     >
-      <CardHeader className="flex items-start gap-3 px-0">
+      <CardHeader className="grid grid-cols-[1.5rem_minmax(0,1fr)] items-start gap-x-3 gap-y-3 px-0 sm:grid-cols-[1.5rem_minmax(0,1fr)_auto]">
         <span
           role="img"
           aria-label={label}
@@ -35,6 +36,7 @@ export const TaskCard = ({ task }: Props) => {
             {task.name}
           </h2>
         </CardTitle>
+        <TaskCardCompletedActionsMenu task={task} />
       </CardHeader>
       {hasDescription && (
         <CardContent className="px-0 sm:ml-8">
