@@ -17,6 +17,8 @@ const task: Task = {
   due_at: "2026-09-28T12:00:00Z",
   goal_reference_xid: "goal_01",
   parent_reference_xid: null,
+  time_entries: [],
+  has_children: false,
   tags: [],
 };
 
