@@ -24,6 +24,7 @@ export interface Task extends ApiResource {
   parent_reference_xid: string | null;
   tags: TaskTag[];
   time_entries: TimeEntry[];
+  has_children: boolean;
 }
 
 export interface TasksResponse {
