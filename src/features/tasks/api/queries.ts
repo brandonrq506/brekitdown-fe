@@ -14,11 +14,12 @@ export const taskKeys = {
 };
 
 // Task query for the goal's detail page.
-export const goalDetailsPageTasksQueryOptions = (goalReferenceXid: string) => {
+export const goalDetailsPageTasksQueryOptions = (goalReferenceXid: string | null) => {
   return queryOptions({
     queryKey: taskKeys.list({
       filter: {
-        goal_reference_xid: { "==": goalReferenceXid },
+        goal_reference_xid:
+          goalReferenceXid === null ? { empty: true } : { "==": goalReferenceXid },
       },
     }),
     queryFn: getTasks,
