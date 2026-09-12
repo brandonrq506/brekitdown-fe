@@ -3,7 +3,7 @@ import { CalendarIcon } from "lucide-react";
 
 import { TASK_STATUS_PRESENTATION } from "../constants/task-status-presentation";
 import type { Task } from "../types/task";
-import { TaskCardCompletedActionsMenu } from "./task-card-completed-actions-menu";
+import { TaskCardActions } from "./task-card-actions";
 import { TaskDate } from "./task-date";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -36,7 +36,7 @@ export const TaskCard = ({ task }: Props) => {
             {task.name}
           </h2>
         </CardTitle>
-        <TaskCardCompletedActionsMenu task={task} />
+        <TaskCardActions task={task} />
       </CardHeader>
       {hasDescription && (
         <CardContent className="px-0 sm:ml-8">
