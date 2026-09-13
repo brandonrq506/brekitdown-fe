@@ -5,6 +5,8 @@ import type { PaginatedResponse } from "@/types/pagination";
 export interface Goal extends ApiResource {
   name: string;
   description: string | null;
+  archived_at: string | null;
+  starred_at: string | null;
 }
 
 export interface GoalResponse {
@@ -27,4 +29,9 @@ export type GoalPayload = {
 
 export type CreateGoalPayload = GoalPayload;
 
-export type UpdateGoalPayload = GoalPayload;
+export type UpdateGoalPayload = {
+  goal: Partial<GoalPayload["goal"]> & {
+    archived_at?: string | null;
+    starred_at?: string | null;
+  };
+};

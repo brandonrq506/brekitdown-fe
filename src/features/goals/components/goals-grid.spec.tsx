@@ -9,6 +9,8 @@ const goals: Goal[] = [
     updated_at: "2026-08-21T12:00:00Z",
     name: "Learn shadcn/ui",
     description: "Build a small interface.",
+    archived_at: null,
+    starred_at: null,
   },
   {
     reference_xid: "goal_02",
@@ -16,6 +18,8 @@ const goals: Goal[] = [
     updated_at: "2026-08-21T13:00:00Z",
     name: "Ship a feature",
     description: null,
+    archived_at: null,
+    starred_at: null,
   },
 ];
 
