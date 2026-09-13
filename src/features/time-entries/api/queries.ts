@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { getTimeEntries } from "./axios/getTimeEntries";
+import { getTimeEntries } from "./axios/get-time-entries";
 import { TIME_ENTRIES_ENDPOINT } from "@/libs/axios";
 
 export const timeEntryKeys = {

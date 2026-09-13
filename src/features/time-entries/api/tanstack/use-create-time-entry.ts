@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { createTimeEntry } from "../axios/createTimeEntry";
+import { createTimeEntry } from "../axios/create-time-entry";
 
 export const useCreateTimeEntryMutation = () => {
   return useMutation({

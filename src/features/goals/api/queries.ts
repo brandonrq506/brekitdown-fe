@@ -1,8 +1,8 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
 import { DEFAULT_PAGE_SIZE, FIRST_PAGE } from "@/constants/pagination";
-import { getGoal } from "@/features/goals/api/axios/getGoal";
-import { getGoals } from "@/features/goals/api/axios/getGoals";
+import { getGoal } from "@/features/goals/api/axios/get-goal";
+import { getGoals } from "@/features/goals/api/axios/get-goals";
 import { GOALS_ENDPOINT } from "@/libs/axios";
 import type { PageSize } from "@/types/pagination";
 

@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { createGoalMutation } from "@/features/goals/api/tanstack/createGoalMutation";
+import { createGoalMutation } from "@/features/goals/api/tanstack/create-goal-mutation";
 import { GoalForm } from "@/features/goals/components/goal-form";
 import { toGoalPayload } from "@/features/goals/utils/goal-payload";
 

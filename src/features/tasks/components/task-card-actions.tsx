@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { goalDetailsPageTasksQueryOptions } from "@/features/tasks/api/queries";
-import { useDeleteTaskMutation } from "@/features/tasks/api/tanstack/deleteTaskMutation";
+import { useDeleteTaskMutation } from "@/features/tasks/api/tanstack/delete-task-mutation";
 import { TaskCardStartBtn } from "@/routes/_protected/goals/-components/task-card-start-btn";
 import { TaskCardStopBtn } from "@/routes/_protected/goals/-components/task-card-stop-btn";
 

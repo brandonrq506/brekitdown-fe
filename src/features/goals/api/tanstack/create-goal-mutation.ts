@@ -1,6 +1,6 @@
 import { mutationOptions, type QueryClient } from "@tanstack/react-query";
 
-import { createGoal } from "@/features/goals/api/axios/createGoal";
+import { createGoal } from "@/features/goals/api/axios/create-goal";
 import { goalKeys } from "@/features/goals/api/queries";
 
 export const createGoalMutation = (queryClient: QueryClient) =>

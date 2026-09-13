@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { getTasks } from "@/features/tasks/api/axios/getTasks";
+import { getTasks } from "@/features/tasks/api/axios/get-tasks";
 import type { TaskApiFilters } from "@/features/tasks/types/task-api-filters";
 import { TASKS_ENDPOINT } from "@/libs/axios";
 import type { ApiQueryOptions } from "@/types/api-query";

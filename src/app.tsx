@@ -11,7 +11,7 @@ function App() {
       <p>
         Edit{" "}
         <code className="rounded bg-muted px-2 py-1 font-mono text-sm text-foreground">
-          src/App.tsx
+          src/app.tsx
         </code>{" "}
         and save to test HMR
       </p>
