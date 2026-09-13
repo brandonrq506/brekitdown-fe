@@ -18,6 +18,8 @@ const goalResponse: GoalResponse = {
     updated_at: "2026-08-31T12:00:00Z",
     name: "Ship release",
     description: null,
+    archived_at: null,
+    starred_at: null,
   },
 };
 

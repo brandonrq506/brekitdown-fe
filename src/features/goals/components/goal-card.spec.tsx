@@ -8,6 +8,8 @@ const goal: Goal = {
   updated_at: "2026-08-21T12:00:00Z",
   name: "Learn shadcn/ui",
   description: "Build a small interface with components we own.",
+  archived_at: null,
+  starred_at: null,
 };
 
 it("shows the goal name and full description without exposing resource metadata", () => {
