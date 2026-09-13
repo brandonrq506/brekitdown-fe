@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { ThemeToggle } from "@/features/theme/components/ThemeToggle";
+import { ThemeToggle } from "@/features/theme/components/theme-toggle";
 
 export const Route = createFileRoute("/_protected")({
   component: RouteComponent,

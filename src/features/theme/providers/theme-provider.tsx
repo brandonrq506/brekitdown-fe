@@ -1,6 +1,6 @@
 import { useEffect, useState, type PropsWithChildren } from "react";
 
-import { ThemeContext } from "../contexts/ThemeContext";
+import { ThemeContext } from "../contexts/theme-context";
 import {
   applyTheme,
   persistTheme,

@@ -1,7 +1,7 @@
 import { use } from "react";
 
-import { ThemeContext } from "../contexts/ThemeContext";
-import type { ThemeContextType } from "../types/ThemeContextType";
+import { ThemeContext } from "../contexts/theme-context";
+import type { ThemeContextType } from "../types/theme-context-type";
 
 /**
  * Reads the application theme state owned by {@link ThemeProvider}.

@@ -12,7 +12,7 @@ The goals [query factory](../src/features/goals/api/queries.ts) owns query keys 
 
 Writing those options independently would require every caller to remember the same key shape, defaults, and pagination rules. The factory removes that repeated responsibility. A correction to the shared options reaches both loading and rendering code.
 
-The same ownership extends to cache operations: [the create mutation](../src/features/goals/api/tanstack/createGoalMutation.ts) uses `goalKeys.detail(...)` to populate the detail cache and `goalKeys.lists()` to invalidate lists. Use these factories instead of reconstructing keys at call sites, so fetching and cache maintenance agree on query identity.
+The same ownership extends to cache operations: [the create mutation](../src/features/goals/api/tanstack/create-goal-mutation.ts) uses `goalKeys.detail(...)` to populate the detail cache and `goalKeys.lists()` to invalidate lists. Use these factories instead of reconstructing keys at call sites, so fetching and cache maintenance agree on query identity.
 
 ## Derive what can be derived
 
@@ -26,7 +26,7 @@ export type PageSize = (typeof PAGE_SIZES)[number];
 
 Changing the supported values updates the type automatically. A separately written union could drift from the values the application actually uses.
 
-The [goal list query function](../src/features/goals/api/axios/getGoals.ts) applies the same idea to its inputs:
+The [goal list query function](../src/features/goals/api/axios/get-goals.ts) applies the same idea to its inputs:
 
 ```ts
 type GoalListQueryKey = ReturnType<typeof goalKeys.list>;

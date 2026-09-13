@@ -1,9 +1,9 @@
 import userEvent from "@testing-library/user-event";
 import { act } from "react";
 
-import { ThemeToggle } from "../components/ThemeToggle";
+import { ThemeToggle } from "../components/theme-toggle";
 import { DARK_QUERY, THEME_STORAGE_KEY } from "../constants/theme";
-import { ThemeProvider } from "./ThemeProvider";
+import { ThemeProvider } from "./theme-provider";
 import { render, screen, waitFor } from "@/test/test-utils";
 import { THEME_LABELS } from "../types/theme";
 
