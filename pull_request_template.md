@@ -8,6 +8,7 @@
 - [ ] New Feature
 - [ ] Refactor
 - [ ] Documentation Improvement
+- [ ] Library Update
 - [ ] Other:
 
 ## Verification
