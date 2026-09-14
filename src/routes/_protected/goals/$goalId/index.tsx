@@ -2,6 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { createFileRoute } from "@tanstack/react-router";
 import { goalQueries } from "@/features/goals/api/queries";
+import { GoalStarButton } from "@/features/goals/components/goal-star-button";
 import { goalDetailsPageTasksQueryOptions } from "@/features/tasks/api/queries";
 import { TaskCard } from "@/features/tasks/components/task-card";
 
@@ -34,15 +35,18 @@ function RouteComponent() {
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-10 sm:px-6">
-      <header className="space-y-2 border-b pb-6">
-        <h1 className="text-4xl font-medium tracking-tight wrap-break-word">{data.data.name}</h1>
-        {/* Won't be needed once we make description non-null */}
-        {Boolean(data.data.description?.trim()) && (
-          <p className="text-sm wrap-break-word text-muted-foreground">{data.data.description}</p>
-        )}
-        <p className="text-sm text-muted-foreground">
-          {tasksData.data.length} {tasksData.data.length === 1 ? "task" : "tasks"}
-        </p>
+      <header className="flex items-start justify-between gap-4 border-b pb-6">
+        <div className="space-y-2">
+          <h1 className="text-4xl font-medium tracking-tight wrap-break-word">{data.data.name}</h1>
+          {/* Won't be needed once we make description non-null */}
+          {Boolean(data.data.description?.trim()) && (
+            <p className="text-sm wrap-break-word text-muted-foreground">{data.data.description}</p>
+          )}
+          <p className="text-sm text-muted-foreground">
+            {tasksData.data.length} {tasksData.data.length === 1 ? "task" : "tasks"}
+          </p>
+        </div>
+        <GoalStarButton goal={data.data} />
       </header>
       <section
         aria-label="Tasks"
