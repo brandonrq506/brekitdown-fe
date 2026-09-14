@@ -1,4 +1,4 @@
-import { formatExactTaskDate, formatTaskDate } from "./format-task-date";
+import { formatExactTaskDate, formatTaskDate } from "../format-task-date";
 
 // A viewer six hours behind UTC, so the zone genuinely changes which day an instant lands on.
 const zonedNow = (date: string) =>

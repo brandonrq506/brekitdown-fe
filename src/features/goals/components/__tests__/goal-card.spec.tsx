@@ -1,5 +1,5 @@
-import { GoalCard } from "./goal-card";
-import type { Goal } from "../types/goal";
+import { GoalCard } from "../goal-card";
+import type { Goal } from "../../types/goal";
 import { render, screen } from "@/test/test-utils";
 
 const goal: Goal = {

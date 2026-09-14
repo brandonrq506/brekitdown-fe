@@ -1,5 +1,5 @@
-import { GoalsGrid } from "./goals-grid";
-import type { Goal } from "../types/goal";
+import { GoalsGrid } from "../goals-grid";
+import type { Goal } from "../../types/goal";
 import { render, screen } from "@/test/test-utils";
 
 const goals: Goal[] = [

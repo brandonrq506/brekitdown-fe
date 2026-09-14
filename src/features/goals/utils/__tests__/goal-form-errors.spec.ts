@@ -1,7 +1,7 @@
 import { AxiosError, AxiosHeaders } from "axios";
 import type { UseFormSetError } from "react-hook-form";
 
-import { setGoalFormErrors } from "./goal-form-errors";
+import { setGoalFormErrors } from "../goal-form-errors";
 import { HTTP_STATUS } from "@/constants/http";
 import type { GoalFormValues } from "@/features/goals/types/goal";
 

@@ -1,4 +1,4 @@
-import { toGoalPayload } from "./goal-payload";
+import { toGoalPayload } from "../goal-payload";
 
 it("trims the submitted values", () => {
   expect(toGoalPayload({ name: "  Ship release  ", description: "  Context  " })).toEqual({

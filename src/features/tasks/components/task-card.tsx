@@ -40,7 +40,7 @@ export const TaskCard = ({ task }: Props) => {
       </CardHeader>
       {hasDescription && (
         <CardContent className="px-0 sm:ml-8">
-          <p className="text-sm leading-relaxed wrap-break-word text-muted-foreground">
+          <p className="text-sm leading-relaxed wrap-break-word whitespace-pre-wrap text-muted-foreground">
             {task.description}
           </p>
         </CardContent>
