@@ -5,7 +5,7 @@ import { goalQueries } from "@/features/goals/api/queries";
 
 export const Route = createFileRoute("/_protected/goals/")({
   loader: async ({ context: { queryClient } }) => {
-    await queryClient.ensureInfiniteQueryData(goalQueries.list());
+    await queryClient.infiniteQuery({ ...goalQueries.list(), staleTime: "static" });
   },
   component: GoalsIndexPage,
   head: () => ({

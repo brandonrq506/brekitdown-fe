@@ -9,8 +9,11 @@ export const Route = createFileRoute("/_protected/goals/$goalId/")({
   component: RouteComponent,
   loader: async ({ context: { queryClient }, params: { goalId } }) => {
     const [goal] = await Promise.all([
-      queryClient.ensureQueryData(goalQueries.detail(goalId)),
-      queryClient.ensureQueryData(goalDetailsPageTasksQueryOptions(goalId)),
+      queryClient.query({ ...goalQueries.detail(goalId), staleTime: "static" }),
+      queryClient.query({
+        ...goalDetailsPageTasksQueryOptions(goalId),
+        staleTime: "static",
+      }),
     ]);
 
     return goal;
