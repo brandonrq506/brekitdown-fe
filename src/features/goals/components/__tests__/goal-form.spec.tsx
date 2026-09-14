@@ -1,7 +1,7 @@
 import userEvent from "@testing-library/user-event";
 
-import { GoalForm } from "./goal-form";
-import type { GoalFormValues } from "../types/goal";
+import { GoalForm } from "../goal-form";
+import type { GoalFormValues } from "../../types/goal";
 import { render, screen, waitFor } from "@/test/test-utils";
 
 const FORM_ERROR_MESSAGE = "We couldn't save your goal. Please try again.";

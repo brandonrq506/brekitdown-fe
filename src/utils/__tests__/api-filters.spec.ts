@@ -1,6 +1,6 @@
 import { expectTypeOf } from "vite-plus/test";
 
-import { normalizeFilters, serializeFilters } from "./api-filters";
+import { normalizeFilters, serializeFilters } from "../api-filters";
 import { taskKeys } from "@/features/tasks/api/queries";
 import type { ApiFilter } from "@/types/api-query";
 

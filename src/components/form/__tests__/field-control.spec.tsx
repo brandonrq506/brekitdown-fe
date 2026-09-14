@@ -1,7 +1,7 @@
 import userEvent from "@testing-library/user-event";
 import { createRef } from "react";
 
-import { InputField, TextareaField } from "./field-control";
+import { InputField, TextareaField } from "../field-control";
 import { render, screen } from "@/test/test-utils";
 
 it("connects an input label, descriptions, and error", () => {

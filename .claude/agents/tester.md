@@ -116,12 +116,12 @@ Extract only infrastructure that every test in the file needs identically and th
 
 ## Repo conventions
 
-- File: `foo.spec.tsx` next to `foo.tsx` (or `.spec.ts` for utils). No `__tests__/` directories, regardless of what `CLAUDE.md`'s tree diagram shows. The lint relaxation (`max-lines-per-function: 200`, `no-magic-numbers` off) only applies to `*.spec.*`.
+- File: `foo.spec.tsx` (or `.spec.ts` for utils) inside a `__tests__/` directory that is a sibling of the subject: `components/foo.tsx` → `components/__tests__/foo.spec.tsx`, `utils/bar.ts` → `utils/__tests__/bar.spec.ts`. The `__tests__/` folder sits in the same parent as the subject, never higher up. Relative imports start with `../` (`import { Foo } from "../foo"`; a sibling folder becomes `../../types/task`). Keep the `.spec` suffix: the lint relaxation (`max-lines-per-function: 200`, `no-magic-numbers` off) is keyed on `**/*.spec.*`, not on the directory.
 - Import `render`, `screen`, `within`, `waitFor`, `renderHook` from `@/test/test-utils`. Never from `@testing-library/react`.
 - Import `vi`, `expectTypeOf` from `vite-plus/test` when you need them. `it`, `expect` are globals.
 - Build URLs as `` `${api.defaults.baseURL}${SOME_ENDPOINT}` `` using the constants exported from `@/libs/axios`.
-- Type-level tests live next to runtime tests in the same spec (`expectTypeOf`, `@ts-expect-error`); see `src/utils/api-filters.spec.ts`.
-- Pending-state tests use a manually resolved promise inside the handler (see `task-card-actions.spec.tsx` "starts deletion immediately"). Keep that pattern.
+- Type-level tests live next to runtime tests in the same spec (`expectTypeOf`, `@ts-expect-error`); see `src/utils/__tests__/api-filters.spec.ts`.
+- Pending-state tests use a manually resolved promise inside the handler (see `components/__tests__/task-card-actions.spec.tsx` "starts deletion immediately"). Keep that pattern.
 
 ## Review mode
 
