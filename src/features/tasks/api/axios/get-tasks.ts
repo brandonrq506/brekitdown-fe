@@ -11,10 +11,10 @@ export const getTasks = async ({
   queryKey: [{ filter }],
   signal,
 }: QueryFunctionContext<TaskListQueryKey>): Promise<TasksResponse> => {
-  const { data } = await api.get<TasksResponse>(TASKS_ENDPOINT, {
+  const response = await api.get<TasksResponse>(TASKS_ENDPOINT, {
     params: serializeFilters(filter),
     signal,
   });
 
-  return data;
+  return response.data;
 };

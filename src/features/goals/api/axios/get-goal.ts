@@ -11,6 +11,7 @@ export const getGoal = async ({
   queryKey: [{ referenceXid }],
 }: QueryFunctionContext<GoalDetailQueryKey>): Promise<GoalResponse> => {
   const URL = `${GOALS_ENDPOINT}/${referenceXid}`;
+
   const response = await api.get<GoalResponse>(URL, { signal });
 
   return response.data;
