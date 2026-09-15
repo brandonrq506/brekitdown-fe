@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 
@@ -12,15 +11,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { createGoalMutation } from "@/features/goals/api/tanstack/create-goal-mutation";
+import { useCreateGoalMutation } from "@/features/goals/api/tanstack/use-create-goal";
 import { GoalForm } from "@/features/goals/components/goal-form";
 import { toGoalPayload } from "@/features/goals/utils/goal-payload";
 
 export const CreateGoalDialog = () => {
   const [open, setOpen] = useState(false);
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const createGoal = useMutation(createGoalMutation(queryClient));
+  const createGoal = useCreateGoalMutation();
   const isCreating = createGoal.isPending;
 
   const handleOpenChange = (nextOpen: boolean) => {
