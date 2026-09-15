@@ -5,6 +5,7 @@ import { goalQueries } from "@/features/goals/api/queries";
 import { GoalStarButton } from "@/features/goals/components/goal-star-button";
 import { goalDetailsPageTasksQueryOptions } from "@/features/tasks/api/queries";
 import { TaskCard } from "@/features/tasks/components/task-card";
+import { orderGoalDetailsTasks } from "@/features/tasks/utils/order-goal-details-tasks";
 
 export const Route = createFileRoute("/_protected/goals/$goalId/")({
   component: RouteComponent,
@@ -32,6 +33,7 @@ function RouteComponent() {
   const { goalId } = Route.useParams();
   const { data } = useSuspenseQuery(goalQueries.detail(goalId));
   const { data: tasksData } = useSuspenseQuery(goalDetailsPageTasksQueryOptions(goalId));
+  const tasks = orderGoalDetailsTasks(tasksData.data);
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-10 sm:px-6">
@@ -43,7 +45,7 @@ function RouteComponent() {
             <p className="text-sm wrap-break-word text-muted-foreground">{data.data.description}</p>
           )}
           <p className="text-sm text-muted-foreground">
-            {tasksData.data.length} {tasksData.data.length === 1 ? "task" : "tasks"}
+            {tasks.length} {tasks.length === 1 ? "task" : "tasks"}
           </p>
         </div>
         <GoalStarButton goal={data.data} />
@@ -52,10 +54,10 @@ function RouteComponent() {
         aria-label="Tasks"
         className="flex flex-col gap-5 rounded-2xl bg-muted/30 p-4 sm:p-6"
       >
-        {tasksData.data.map((task) => (
+        {tasks.map((task) => (
           <TaskCard key={task.reference_xid} task={task} />
         ))}
-        {tasksData.data.length === 0 && (
+        {tasks.length === 0 && (
           <p className="text-sm text-muted-foreground">No tasks for this goal yet.</p>
         )}
       </section>
