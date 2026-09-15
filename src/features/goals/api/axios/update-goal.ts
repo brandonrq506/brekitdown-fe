@@ -9,6 +9,7 @@ interface Props {
 export const updateGoal = async ({ referenceXid, payload }: Props): Promise<GoalResponse> => {
   const URL = `${GOALS_ENDPOINT}/${referenceXid}`;
 
-  const { data } = await api.patch<GoalResponse>(URL, payload);
-  return data;
+  const response = await api.patch<GoalResponse>(URL, payload);
+
+  return response.data;
 };

@@ -31,9 +31,9 @@ export const getGoal = async ({
   queryKey: [{ referenceXid }],
   signal,
 }: QueryFunctionContext<GoalDetailQueryKey>): Promise<GoalResponse> => {
-  const { data } = await api.get<GoalResponse>(`/goals/${referenceXid}`, { signal });
+  const response = await api.get<GoalResponse>(`/goals/${referenceXid}`, { signal });
 
-  return data;
+  return response.data;
 };
 ```
 
@@ -123,7 +123,7 @@ export const getGoals = async ({
   pageParam,
   signal,
 }: GoalListQueryContext): Promise<GoalsResponse> => {
-  const { data } = await api.get<GoalsResponse>("/goals", {
+  const response = await api.get<GoalsResponse>("/goals", {
     params: {
       page: pageParam,
       page_size: pageSize,
@@ -131,7 +131,7 @@ export const getGoals = async ({
     signal,
   });
 
-  return data;
+  return response.data;
 };
 ```
 
@@ -158,7 +158,7 @@ direction as data, include it in the page-param value returned by `getNextPagePa
 Always pass `context.signal` to Axios:
 
 ```ts
-const { data } = await api.get<Response>(url, { signal });
+const response = await api.get<Response>(url, { signal });
 ```
 
 TanStack can then cancel an abandoned or superseded request. Do not create a separate
@@ -198,8 +198,9 @@ backend contract in one transport-facing location.
 Return the response envelope expected by the feature type:
 
 ```ts
-const { data } = await api.get<GoalsResponse>("/goals", options);
-return data;
+const response = await api.get<GoalsResponse>("/goals", options);
+
+return response.data;
 ```
 
 If the same HTTP operation later needs to run outside TanStack Query, split it into a pure Axios

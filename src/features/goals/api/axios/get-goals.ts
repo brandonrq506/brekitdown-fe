@@ -12,10 +12,10 @@ export const getGoals = async ({
   pageParam,
   signal,
 }: GoalListQueryContext): Promise<GoalsResponse> => {
-  const { data } = await api.get<GoalsResponse>(GOALS_ENDPOINT, {
+  const response = await api.get<GoalsResponse>(GOALS_ENDPOINT, {
     params: { page: pageParam, page_size: pageSize },
     signal,
   });
 
-  return data;
+  return response.data;
 };

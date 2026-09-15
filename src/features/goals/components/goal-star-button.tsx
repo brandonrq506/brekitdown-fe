@@ -1,9 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { StarIcon } from "lucide-react";
 
 import type { Goal } from "../types/goal";
 import { Button } from "@/components/ui/button";
-import { updateGoalMutation } from "@/features/goals/api/tanstack/update-goal-mutation";
+import { useUpdateGoalMutation } from "@/features/goals/api/tanstack/use-update-goal";
 import { cn } from "@/utils/cn";
 
 type GoalStarButtonProps = {
@@ -11,8 +10,7 @@ type GoalStarButtonProps = {
 };
 
 export const GoalStarButton = ({ goal }: GoalStarButtonProps) => {
-  const queryClient = useQueryClient();
-  const updateGoal = useMutation(updateGoalMutation(queryClient));
+  const updateGoal = useUpdateGoalMutation();
   const starredAt =
     updateGoal.data === undefined ? goal.starred_at : updateGoal.data.data.starred_at;
   const isStarred = starredAt !== null;

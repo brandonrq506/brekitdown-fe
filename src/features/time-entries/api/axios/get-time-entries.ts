@@ -16,9 +16,7 @@ export const getTimeEntries = async ({
 }: QueryFunctionContext<TimeEntryListQueryKey>): Promise<TimeEntriesResponse> => {
   const URL = timeEntriesEndpoint(taskReferenceXid);
 
-  const response = await api.get<TimeEntriesResponse>(URL, {
-    signal,
-  });
+  const response = await api.get<TimeEntriesResponse>(URL, { signal });
 
   return response.data;
 };

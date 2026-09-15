@@ -12,7 +12,7 @@ The goals [query factory](../src/features/goals/api/queries.ts) owns query keys 
 
 Writing those options independently would require every caller to remember the same key shape, defaults, and pagination rules. The factory removes that repeated responsibility. A correction to the shared options reaches both loading and rendering code.
 
-The same ownership extends to cache operations: [the create mutation](../src/features/goals/api/tanstack/create-goal-mutation.ts) uses `goalKeys.detail(...)` to populate the detail cache and `goalKeys.lists()` to invalidate lists. Use these factories instead of reconstructing keys at call sites, so fetching and cache maintenance agree on query identity.
+The same ownership extends to cache operations: [the create mutation hook](../src/features/goals/api/tanstack/use-create-goal.ts) uses `goalKeys.detail(...)` to populate the detail cache and `goalKeys.lists()` to invalidate lists. Use these factories instead of reconstructing keys at call sites, so fetching and cache maintenance agree on query identity.
 
 ## Derive what can be derived
 

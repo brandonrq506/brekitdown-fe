@@ -10,7 +10,8 @@ export const timeEntryKeys = {
     [{ ...timeEntryKeys.task(taskReferenceXid)[0], entity: "list" }] as const,
 };
 
-export const timeEntryQueries = {
+// Fetches every time entry logged against a single task.
+export const taskTimeEntryQueries = {
   list: (taskReferenceXid: string) =>
     queryOptions({ queryKey: timeEntryKeys.list(taskReferenceXid), queryFn: getTimeEntries }),
 };
