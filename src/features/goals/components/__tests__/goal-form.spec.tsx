@@ -45,6 +45,7 @@ it("treats a whitespace-only name as empty", async () => {
   renderForm(onSubmit);
 
   await typeName(user, "   ");
+
   await submit(user);
 
   expect(await screen.findByRole("alert")).toHaveTextContent("Goal name is required.");
@@ -57,7 +58,9 @@ it("hands the entered values to the caller", async () => {
   renderForm(onSubmit);
 
   await typeName(user, "  Ship release  ");
+
   await user.type(screen.getByRole("textbox", { name: "Description" }), "Context");
+
   await submit(user);
 
   await waitFor(() => {
@@ -75,6 +78,7 @@ it("locks the actions while the submission is in flight", async () => {
   renderForm(onSubmit);
 
   await typeName(user, "Ship release");
+
   await submit(user);
 
   expect(await screen.findByRole("button", { name: "Saving…" })).toBeDisabled();
@@ -87,12 +91,13 @@ it("locks the actions while the submission is in flight", async () => {
   });
 });
 
-it("keeps the entered values and shows the form message when the submission fails", async () => {
+it("preserves a failed submission for correction", async () => {
   const user = userEvent.setup();
   const onSubmit = () => Promise.reject(new Error("Network down"));
   renderForm(onSubmit);
 
   await typeName(user, "Keep this value");
+
   await submit(user);
 
   expect(await screen.findByRole("alert")).toHaveTextContent(FORM_ERROR_MESSAGE);
@@ -106,6 +111,7 @@ it("cancels without submitting", async () => {
   renderForm(onSubmit, onCancel);
 
   await typeName(user, "Ship release");
+
   await user.click(screen.getByRole("button", { name: "Cancel" }));
 
   expect(onCancel).toHaveBeenCalledTimes(1);

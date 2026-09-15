@@ -1,10 +1,23 @@
-import { vi } from "vite-plus/test";
-
 import { TaskCard } from "../task-card";
-import { TASK_STATUS } from "../../types/task";
+import { TASK_STATUS, type TASK_STATUS as TaskStatus } from "../../types/task";
 import { buildTask, task } from "@/test/store/tasks";
 import { render, screen } from "@/test/test-utils";
 
+const statusIcons: [label: string, status: TaskStatus][] = [
+  ["Scheduled", TASK_STATUS.SCHEDULED],
+  ["In progress", TASK_STATUS.IN_PROGRESS],
+  ["Completed", TASK_STATUS.COMPLETED],
+  ["Dropped", TASK_STATUS.DROPPED],
+  ["On hold", TASK_STATUS.ON_HOLD],
+];
+
+/** Both date labels are read against the clock, and `Date` is the only clock Vitest can fake. */
+const pinToday = (today: string) => {
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(today);
+};
+
+// `clearMocks` restores mocks between tests, but not the clock.
 afterEach(() => {
   vi.useRealTimers();
 });
@@ -22,22 +35,14 @@ it("shows the task's description", () => {
   expect(screen.getByText(task.description)).toBeVisible();
 });
 
-it.each([
-  [TASK_STATUS.SCHEDULED, "Scheduled"],
-  [TASK_STATUS.IN_PROGRESS, "In progress"],
-  [TASK_STATUS.COMPLETED, "Completed"],
-  [TASK_STATUS.DROPPED, "Dropped"],
-  [TASK_STATUS.ON_HOLD, "On hold"],
-] as const)("names a %s task's status icon %s", (status, label) => {
+it.each(statusIcons)("shows the %s status icon", (label, status) => {
   render(<TaskCard task={buildTask({ status })} />);
 
   expect(screen.getByRole("img", { name: label })).toBeVisible();
 });
 
 it("shows how long ago the task was created", () => {
-  vi.useFakeTimers({ toFake: ["Date"] });
-  vi.setSystemTime("2026-09-13T12:00:00Z");
-
+  pinToday("2026-09-13T12:00:00Z");
   render(<TaskCard task={task} />);
 
   expect(screen.getByRole("article", { name: task.name })).toHaveTextContent(
@@ -46,9 +51,7 @@ it("shows how long ago the task was created", () => {
 });
 
 it("shows the day the task is due", () => {
-  vi.useFakeTimers({ toFake: ["Date"] });
-  vi.setSystemTime("2026-09-13T12:00:00Z");
-
+  pinToday("2026-09-13T12:00:00Z");
   render(<TaskCard task={task} />);
 
   expect(screen.getByRole("article", { name: task.name })).toHaveTextContent(/Due\s*Sep 28/);

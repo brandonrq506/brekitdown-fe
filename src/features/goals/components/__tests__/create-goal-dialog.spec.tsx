@@ -53,6 +53,7 @@ const gatedCreateGoalHandler = () => {
 it.each(dismissals)("closes when dismissed with $label", async ({ dismiss }) => {
   const user = userEvent.setup();
   render(<CreateGoalDialog />);
+
   const dialog = await openDialog(user);
 
   await dismiss(user, dialog);
@@ -63,8 +64,11 @@ it.each(dismissals)("closes when dismissed with $label", async ({ dismiss }) => 
 it.each(dismissals)("discards the draft when dismissed with $label", async ({ dismiss }) => {
   const user = userEvent.setup();
   render(<CreateGoalDialog />);
+
   const dialog = await openDialog(user);
+
   await user.type(within(dialog).getByRole("textbox", { name: "Name" }), "Draft goal");
+
   await dismiss(user, dialog);
 
   const reopenedDialog = await openDialog(user);
@@ -77,7 +81,9 @@ it("shows a disabled Creating… button while the goal is being created", async 
   const { handler, resolveRequest } = gatedCreateGoalHandler();
   server.use(handler);
   render(<CreateGoalDialog />);
+
   const dialog = await openDialog(user);
+
   await user.type(within(dialog).getByRole("textbox", { name: "Name" }), "Ship release");
 
   await user.click(within(dialog).getByRole("button", { name: "Create goal" }));
@@ -93,7 +99,9 @@ it("disables the close button while the goal is being created", async () => {
   const { handler, resolveRequest } = gatedCreateGoalHandler();
   server.use(handler);
   render(<CreateGoalDialog />);
+
   const dialog = await openDialog(user);
+
   await user.type(within(dialog).getByRole("textbox", { name: "Name" }), "Ship release");
 
   await user.click(within(dialog).getByRole("button", { name: "Create goal" }));
@@ -109,8 +117,11 @@ it("ignores Escape while the goal is being created", async () => {
   const { handler, resolveRequest } = gatedCreateGoalHandler();
   server.use(handler);
   render(<CreateGoalDialog />);
+
   const dialog = await openDialog(user);
+
   await user.type(within(dialog).getByRole("textbox", { name: "Name" }), "Ship release");
+
   await user.click(within(dialog).getByRole("button", { name: "Create goal" }));
 
   await user.keyboard("{Escape}");
@@ -126,8 +137,11 @@ it("ignores a backdrop click while the goal is being created", async () => {
   const { handler, resolveRequest } = gatedCreateGoalHandler();
   server.use(handler);
   render(<CreateGoalDialog />);
+
   const dialog = await openDialog(user);
+
   await user.type(within(dialog).getByRole("textbox", { name: "Name" }), "Ship release");
+
   await user.click(within(dialog).getByRole("button", { name: "Create goal" }));
 
   await user.click(document.body);
@@ -141,7 +155,9 @@ it("ignores a backdrop click while the goal is being created", async () => {
 it("navigates to the created goal after a successful request", async () => {
   const user = userEvent.setup();
   const { router } = render(<CreateGoalDialog />);
+
   const dialog = await openDialog(user);
+
   await user.type(within(dialog).getByRole("textbox", { name: "Name" }), "Ship release");
 
   await user.click(within(dialog).getByRole("button", { name: "Create goal" }));
@@ -159,23 +175,27 @@ it("shows the server's name error on the Name field", async () => {
     ),
   );
   render(<CreateGoalDialog />);
+
   const dialog = await openDialog(user);
-  await user.type(within(dialog).getByRole("textbox", { name: "Name" }), "Existing goal");
+
+  const nameField = within(dialog).getByRole("textbox", { name: "Name" });
+  await user.type(nameField, "Existing goal");
 
   await user.click(within(dialog).getByRole("button", { name: "Create goal" }));
 
   expect(await within(dialog).findByRole("alert")).toHaveTextContent("has already been taken");
-  expect(within(dialog).getByRole("textbox", { name: "Name" })).toHaveAccessibleDescription(
-    /has already been taken/,
-  );
+  expect(nameField).toHaveAccessibleDescription(/has already been taken/);
 });
 
 it("closes on Escape after creation fails", async () => {
   const user = userEvent.setup();
   server.use(http.post(apiRoutes.goals, () => HttpResponse.error()));
   render(<CreateGoalDialog />);
+
   const dialog = await openDialog(user);
+
   await user.type(within(dialog).getByRole("textbox", { name: "Name" }), "Ship release");
+
   await user.click(within(dialog).getByRole("button", { name: "Create goal" }));
   await within(dialog).findByRole("alert");
 
