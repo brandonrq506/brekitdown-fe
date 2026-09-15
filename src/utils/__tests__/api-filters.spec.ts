@@ -6,6 +6,7 @@ import type { ApiFilter } from "@/types/api-query";
 
 it("serializes multiple operators and fields deterministically", () => {
   const filters = { goal_reference_xid: { "==": "goal" }, due_at: { ">=": "start", "<": "end" } };
+
   expect([...serializeFilters(filters)]).toEqual([
     ["filters[0][field]", "due_at"],
     ["filters[0][op]", "<"],
@@ -54,7 +55,7 @@ it("appends no query string when there is nothing to filter", () => {
   expect(serializeFilters({}).toString()).toBe("");
 });
 
-it("preserves false and zero and omits only undefined entries", () => {
+it("omits only undefined operands, never falsy ones", () => {
   expect([
     ...serializeFilters({ example: { "==": 0, empty: false, ">": undefined } }).values(),
   ]).toEqual(["example", "==", "0", "example", "empty", "false"]);
@@ -64,6 +65,7 @@ it("enforces the task filter contract at compile time", () => {
   taskKeys.list({
     filter: { due_at: { ">=": "2026-09-02T00:00:00Z", empty: false } },
   });
+
   // @ts-expect-error Unsupported task property.
   taskKeys.list({ filter: { tags: { "==": "tag" } } });
   // @ts-expect-error Goal references only support equality.

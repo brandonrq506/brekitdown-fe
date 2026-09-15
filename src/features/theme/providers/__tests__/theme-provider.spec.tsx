@@ -1,6 +1,5 @@
 import userEvent from "@testing-library/user-event";
 import { act } from "react";
-import { vi } from "vite-plus/test";
 
 import { ThemeToggle } from "../../components/theme-toggle";
 import { DARK_QUERY, THEME_STORAGE_KEY } from "../../constants/theme";
@@ -37,7 +36,7 @@ const expectAppliedTheme = (theme: ResolvedTheme) => {
 };
 
 /** jsdom has no `matchMedia`, and the OS preference has to be changeable mid-test. */
-function installMatchMedia(osPrefersDark: boolean) {
+const installMatchMedia = (osPrefersDark: boolean) => {
   let matches = osPrefersDark;
   const listeners = new Set<(event: MediaQueryListEvent) => void>();
 
@@ -61,7 +60,7 @@ function installMatchMedia(osPrefersDark: boolean) {
       act(() => listeners.forEach((listener) => listener(event)));
     },
   };
-}
+};
 
 // `act` is required: another tab's write arrives as a plain window event, outside React.
 const changeThemeInAnotherTab = (newValue: string | null) => {
@@ -70,16 +69,15 @@ const changeThemeInAnotherTab = (newValue: string | null) => {
   });
 };
 
+// `unstubGlobals` already restores `matchMedia`; storage and `<html>` outlive a render.
 afterEach(() => {
-  vi.unstubAllGlobals();
-  window.localStorage.removeItem(THEME_STORAGE_KEY);
+  localStorage.removeItem(THEME_STORAGE_KEY);
   document.documentElement.classList.remove(THEME.LIGHT, THEME.DARK);
   document.documentElement.style.colorScheme = "";
 });
 
 it("follows a light OS preference when no theme is stored", () => {
   installMatchMedia(false);
-
   render(<ThemedApp />);
 
   expectAppliedTheme(THEME.LIGHT);
@@ -109,7 +107,6 @@ it("turns dark when the OS turns dark while on system", () => {
 it("starts in the theme stored on a previous visit", () => {
   installMatchMedia(false);
   localStorage.setItem(THEME_STORAGE_KEY, THEME.DARK);
-
   render(<ThemedApp />);
 
   expectAppliedTheme(THEME.DARK);
@@ -183,7 +180,6 @@ it("clears the stored theme when the user returns to system", async () => {
 it("falls back to the OS scheme when the stored theme is unknown", () => {
   installMatchMedia(true);
   localStorage.setItem(THEME_STORAGE_KEY, "sepia");
-
   render(<ThemedApp />);
 
   expectAppliedTheme(THEME.DARK);
@@ -192,7 +188,6 @@ it("falls back to the OS scheme when the stored theme is unknown", () => {
 it("clears an unknown stored theme", () => {
   installMatchMedia(true);
   localStorage.setItem(THEME_STORAGE_KEY, "sepia");
-
   render(<ThemedApp />);
 
   expect(localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();

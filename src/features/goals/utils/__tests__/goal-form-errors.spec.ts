@@ -1,6 +1,5 @@
 import { AxiosError, AxiosHeaders } from "axios";
 import type { UseFormSetError } from "react-hook-form";
-import { vi } from "vite-plus/test";
 
 import { setGoalFormErrors } from "../goal-form-errors";
 import { HTTP_STATUS } from "@/constants/http";

@@ -1,7 +1,7 @@
 import { TaskCard } from "../task-card";
 import { TASK_STATUS } from "../../types/task";
-import { endedTimeEntry, runningTimeEntry } from "@/test/store/time-entries";
 import { buildTask } from "@/test/store/tasks";
+import { endedTimeEntry, runningTimeEntry } from "@/test/store/time-entries";
 import { render, screen } from "@/test/test-utils";
 
 it.each([TASK_STATUS.SCHEDULED, TASK_STATUS.IN_PROGRESS, TASK_STATUS.DROPPED, TASK_STATUS.ON_HOLD])(
