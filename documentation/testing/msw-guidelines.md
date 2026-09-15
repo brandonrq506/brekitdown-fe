@@ -6,19 +6,21 @@ Use a typed response factory for both the successful baseline and test-specific
 datasets.
 
 ```ts
-import { HttpResponse, http } from "msw";
+import { http } from "msw";
 
-import type { ScheduledTaskAPI } from "@/features/tasks/types/scheduledTask";
 import { apiRoutes } from "@/test/handlers/api-routes";
-import { scheduledTasks } from "@/test/store/tasks";
+import { mockTasksResponse } from "@/test/handlers/tasks";
+import { tasks } from "@/test/store/tasks";
 
-export const mockTasksResponse = (tasks: ScheduledTaskAPI[]) => HttpResponse.json(tasks);
-
-export const taskHandlers = [http.get(apiRoutes.tasks, () => mockTasksResponse(scheduledTasks))];
+export const taskHandlers = [http.get(apiRoutes.tasks, () => mockTasksResponse(tasks))];
 
 // In the test that needs this dataset:
 server.use(http.get(apiRoutes.tasks, () => mockTasksResponse([])));
 ```
+
+Canonical entities and builders live in `src/test/store/`. Response envelopes belong
+to the typed factories in `src/test/handlers/`, so the same entity can be used as a
+component prop or returned by MSW. URL construction belongs in `api-routes.ts`.
 
 ### Keep baseline handlers small and successful
 
@@ -32,7 +34,7 @@ server.use(http.get(apiRoutes.tasks, () => mockTasksResponse([])));
 Mutation handlers are valid happy paths. Keep a shared one when many tests need the same fixed response; otherwise define it locally.
 
 ```ts
-http.delete(apiRoutes.task, () => new HttpResponse(null, { status: 204 }));
+http.delete(apiRoutes.task(), () => new HttpResponse(null, { status: 204 }));
 ```
 
 Do not mutate a shared mock store so later reads imitate Rails persistence:
@@ -49,7 +51,7 @@ http.post(apiRoutes.tasks, async ({ request }) => {
 
 ```ts
 // Preferred: the test owns the result it needs.
-server.use(http.get(apiRoutes.tasks, () => mockTasksResponse(overdueTasks)));
+server.use(http.get(apiRoutes.tasks, () => mockTasksResponse([overdueTask])));
 
 // Avoid: duplicates the Rails filter DSL and its edge cases.
 http.get(apiRoutes.tasks, ({ request }) => {
@@ -93,7 +95,7 @@ server.use(
 server.use(
   http.get(apiRoutes.tasks, async () => {
     await delay(100);
-    return mockTasksResponse(scheduledTasks);
+    return mockTasksResponse(tasks);
   }),
 );
 ```
@@ -107,9 +109,9 @@ Keep ordinary handlers immediate.
 // Avoid: captures an implementation detail for a later assertion.
 let capturedBody: unknown;
 server.use(
-  http.post(apiRoutes.tasks, async ({ request }) => {
+  http.post(apiRoutes.goals, async ({ request }) => {
     capturedBody = await request.json();
-    return HttpResponse.json(scheduledTasks[0], { status: 201 });
+    return mockGoalResponse(createdGoal, { status: 201 });
   }),
 );
 expect(capturedBody).toEqual(expectedBody);
@@ -118,9 +120,10 @@ expect(capturedBody).toEqual(expectedBody);
 When an integration test depends on a frontend-owned request contract, reject the specific invalid request and assert the application's observable result:
 
 ```ts
-interface CreateTaskBody {
-  activity_id: number;
-  scheduled_at: string;
+interface CreateGoalBody {
+  goal: {
+    name: string;
+  };
 }
 
 interface ApiError {
@@ -128,21 +131,21 @@ interface ApiError {
 }
 
 server.use(
-  http.post<never, CreateTaskBody, ScheduledTaskAPI | ApiError>(
-    apiRoutes.tasks,
+  http.post<never, CreateGoalBody, GoalResponse | ApiError>(
+    apiRoutes.goals,
     async ({ request }) => {
       const body = await request.json();
 
-      if (!body.activity_id || !body.scheduled_at) {
-        return HttpResponse.json({ error: "Invalid task payload" }, { status: 422 });
+      if (!body.goal.name) {
+        return HttpResponse.json({ error: "Invalid goal payload" }, { status: 422 });
       }
 
-      return HttpResponse.json(scheduledTasks[0], { status: 201 });
+      return mockGoalResponse(createdGoal, { status: 201 });
     },
   ),
 );
 
-expect(await screen.findByText("Task created")).toBeVisible();
+expect(await screen.findByText("Goal created")).toBeVisible();
 ```
 
 Validate only the contract relevant to the test; do not recreate broad Rails validation.
@@ -150,7 +153,7 @@ Validate only the contract relevant to the test; do not recreate broad Rails val
 ### Model responses accurately
 
 ```ts
-HttpResponse.json(scheduledTasks); // JSON response
+mockTasksResponse(tasks); // Typed JSON response
 new HttpResponse(null, { status: 204 }); // No Content: never attach a body
 HttpResponse.json({ error: "Invalid task" }, { status: 422 }); // HTTP error
 HttpResponse.error(); // Transport failure, not a server 4xx/5xx
@@ -163,9 +166,9 @@ Match the backend's status, body, and relevant headers. Do not invent response s
 Prefer inference when a typed fixture or factory already protects the response:
 
 ```ts
-const mockTasksResponse = (tasks: ScheduledTaskAPI[]) => HttpResponse.json(tasks);
+const mockTasksResponse = (data: Task[]) => HttpResponse.json<TasksResponse>({ data });
 
-http.get(apiRoutes.tasks, () => mockTasksResponse(scheduledTasks));
+http.get(apiRoutes.tasks, () => mockTasksResponse(tasks));
 ```
 
 The first three handler generics are positional:
@@ -178,13 +181,14 @@ Use them for a typed `request.json()`, typed `params`, or explicit response enfo
 
 ```ts
 // Typed request body and response.
-http.post<never, CreateTaskBody, ScheduledTaskAPI>(apiRoutes.tasks, async ({ request }) =>
-  HttpResponse.json(buildTask(await request.json())),
-);
+http.post<never, CreateGoalBody, GoalResponse>(apiRoutes.goals, async ({ request }) => {
+  const body = await request.json();
+  return mockGoalResponse(buildGoal(body.goal));
+});
 
 // Typed path parameter and response.
-http.get<{ taskId: string }, never, ScheduledTaskAPI>(apiRoutes.task, ({ params }) =>
-  mockTaskResponse(Number(params.taskId)),
+http.get<{ goalReferenceXid: string }, never, GoalResponse>(apiRoutes.goal(), ({ params }) =>
+  mockGoalResponse(buildGoal({ reference_xid: params.goalReferenceXid })),
 );
 
 // Explicit response enforcement without a typed factory.
@@ -207,7 +211,7 @@ Keep occasional behavior inline:
 ```ts
 http.get(apiRoutes.tasks, async () => {
   await delay(100);
-  return mockTasksResponse(scheduledTasks);
+  return mockTasksResponse(tasks);
 });
 ```
 

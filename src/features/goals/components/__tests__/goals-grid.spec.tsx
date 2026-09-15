@@ -1,27 +1,6 @@
 import { GoalsGrid } from "../goals-grid";
-import type { Goal } from "../../types/goal";
+import { goals } from "@/test/store/goals";
 import { render, screen } from "@/test/test-utils";
-
-const goals: Goal[] = [
-  {
-    reference_xid: "goal_01",
-    inserted_at: "2026-08-20T12:00:00Z",
-    updated_at: "2026-08-21T12:00:00Z",
-    name: "Learn shadcn/ui",
-    description: "Build a small interface.",
-    archived_at: null,
-    starred_at: null,
-  },
-  {
-    reference_xid: "goal_02",
-    inserted_at: "2026-08-20T13:00:00Z",
-    updated_at: "2026-08-21T13:00:00Z",
-    name: "Ship a feature",
-    description: null,
-    archived_at: null,
-    starred_at: null,
-  },
-];
 
 it("renders every goal as a card", () => {
   render(<GoalsGrid goals={goals} />);
@@ -30,6 +9,7 @@ it("renders every goal as a card", () => {
   expect(screen.getAllByRole("article")).toHaveLength(2);
   expect(screen.getByRole("heading", { name: "Learn shadcn/ui" })).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: "Ship a feature" })).toBeInTheDocument();
+  expect(screen.getByText("No description yet.")).toBeInTheDocument();
 });
 
 it("renders an informative empty state", () => {
