@@ -1,14 +1,13 @@
-import userEvent from "@testing-library/user-event";
+import { render, screen, waitFor, waitForElementToBeRemoved, within } from "@/test/test-utils";
 import { http, HttpResponse } from "msw";
+import userEvent from "@testing-library/user-event";
+
+import { apiRoutes } from "@/test/handlers/api-routes";
+import { mockGoalResponse } from "@/test/handlers/goals";
+import { newlyCreatedGoal } from "@/test/store/goals";
 import { server } from "@/test/server";
 
-import { api, GOALS_ENDPOINT } from "@/libs/axios";
 import { CreateGoalDialog } from "../create-goal-dialog";
-import { render, screen, waitFor, waitForElementToBeRemoved, within } from "@/test/test-utils";
-
-import type { GoalResponse } from "../../types/goal";
-
-const GOALS_URL = `${api.defaults.baseURL}${GOALS_ENDPOINT}`;
 
 type User = ReturnType<typeof userEvent.setup>;
 
@@ -16,18 +15,6 @@ interface Dismissal {
   label: string;
   dismiss: (user: User, dialog: HTMLElement) => Promise<void>;
 }
-
-const goalResponse: GoalResponse = {
-  data: {
-    reference_xid: "goal_created",
-    inserted_at: "2026-08-31T12:00:00Z",
-    updated_at: "2026-08-31T12:00:00Z",
-    name: "Ship release",
-    description: null,
-    archived_at: null,
-    starred_at: null,
-  },
-};
 
 const openDialog = async (user: User) => {
   await user.click(screen.getByRole("button", { name: "Create goal" }));
@@ -54,10 +41,10 @@ const gatedCreateGoalHandler = () => {
   const requestGate = new Promise<void>((resolve) => {
     resolveRequest = resolve;
   });
-  const handler = http.post(GOALS_URL, async () => {
+  const handler = http.post(apiRoutes.goals, async () => {
     await requestGate;
 
-    return HttpResponse.json(goalResponse, { status: 201 });
+    return mockGoalResponse(newlyCreatedGoal, { status: 201 });
   });
 
   return { handler, resolveRequest };
@@ -153,7 +140,6 @@ it("ignores a backdrop click while the goal is being created", async () => {
 
 it("navigates to the created goal after a successful request", async () => {
   const user = userEvent.setup();
-  server.use(http.post(GOALS_URL, () => HttpResponse.json(goalResponse, { status: 201 })));
   const { router } = render(<CreateGoalDialog />);
   const dialog = await openDialog(user);
   await user.type(within(dialog).getByRole("textbox", { name: "Name" }), "Ship release");
@@ -168,7 +154,7 @@ it("navigates to the created goal after a successful request", async () => {
 it("shows the server's name error on the Name field", async () => {
   const user = userEvent.setup();
   server.use(
-    http.post(GOALS_URL, () =>
+    http.post(apiRoutes.goals, () =>
       HttpResponse.json({ errors: { name: ["has already been taken"] } }, { status: 422 }),
     ),
   );
@@ -186,7 +172,7 @@ it("shows the server's name error on the Name field", async () => {
 
 it("closes on Escape after creation fails", async () => {
   const user = userEvent.setup();
-  server.use(http.post(GOALS_URL, () => HttpResponse.error()));
+  server.use(http.post(apiRoutes.goals, () => HttpResponse.error()));
   render(<CreateGoalDialog />);
   const dialog = await openDialog(user);
   await user.type(within(dialog).getByRole("textbox", { name: "Name" }), "Ship release");

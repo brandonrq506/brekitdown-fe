@@ -1,23 +1,9 @@
 import { vi } from "vite-plus/test";
 
 import { TaskCard } from "../task-card";
-import { TASK_STATUS, type Task } from "../../types/task";
+import { TASK_STATUS } from "../../types/task";
+import { buildTask, task } from "@/test/store/tasks";
 import { render, screen } from "@/test/test-utils";
-
-const task: Task = {
-  reference_xid: "task_01",
-  inserted_at: "2026-08-20T12:00:00Z",
-  updated_at: "2026-08-21T12:00:00Z",
-  name: "Draft Sendero case study",
-  description: "Write a concise case study that explains the problem, approach, and outcome.",
-  status: TASK_STATUS.IN_PROGRESS,
-  due_at: "2026-09-28T12:00:00Z",
-  goal_reference_xid: "goal_01",
-  parent_reference_xid: null,
-  time_entries: [],
-  has_children: false,
-  tags: [],
-};
 
 afterEach(() => {
   vi.useRealTimers();
@@ -43,7 +29,7 @@ it.each([
   [TASK_STATUS.DROPPED, "Dropped"],
   [TASK_STATUS.ON_HOLD, "On hold"],
 ] as const)("names a %s task's status icon %s", (status, label) => {
-  render(<TaskCard task={{ ...task, status }} />);
+  render(<TaskCard task={buildTask({ status })} />);
 
   expect(screen.getByRole("img", { name: label })).toBeVisible();
 });
@@ -69,7 +55,7 @@ it("shows the day the task is due", () => {
 });
 
 it("tells the user the task has no due date when none is set", () => {
-  render(<TaskCard task={{ ...task, due_at: null }} />);
+  render(<TaskCard task={buildTask({ due_at: null })} />);
 
   expect(screen.getByText("No due date")).toBeVisible();
 });
