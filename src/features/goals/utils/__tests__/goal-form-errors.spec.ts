@@ -1,5 +1,6 @@
 import { AxiosError, AxiosHeaders } from "axios";
 import type { UseFormSetError } from "react-hook-form";
+import { vi } from "vite-plus/test";
 
 import { setGoalFormErrors } from "../goal-form-errors";
 import { HTTP_STATUS } from "@/constants/http";
@@ -19,10 +20,10 @@ const apiFailure = (status: number, data: unknown) =>
 const validationFailure = (errors: Record<string, string[]>) =>
   apiFailure(HTTP_STATUS.UNPROCESSABLE_ENTITY, { errors });
 
-const setup = () => vi.fn<UseFormSetError<GoalFormValues>>();
+const createSetErrorSpy = () => vi.fn<UseFormSetError<GoalFormValues>>();
 
-it("places a field validation error on its field and focuses it", () => {
-  const setError = setup();
+it("maps the first validation failure to its focused field", () => {
+  const setError = createSetErrorSpy();
 
   setGoalFormErrors(
     validationFailure({ name: ["has already been taken"] }),
@@ -39,7 +40,7 @@ it("places a field validation error on its field and focuses it", () => {
 });
 
 it("focuses only the first errored field", () => {
-  const setError = setup();
+  const setError = createSetErrorSpy();
 
   setGoalFormErrors(
     validationFailure({ name: ["is invalid"], description: ["is too long"] }),
@@ -55,7 +56,7 @@ it("focuses only the first errored field", () => {
 });
 
 it("surfaces the form message when a validation error has no field to render it", () => {
-  const setError = setup();
+  const setError = createSetErrorSpy();
 
   setGoalFormErrors(
     validationFailure({ name: ["is invalid"], owner_id: ["is invalid"] }),
@@ -70,7 +71,7 @@ it("surfaces the form message when a validation error has no field to render it"
 });
 
 it("places a non-validation failure on the form", () => {
-  const setError = setup();
+  const setError = createSetErrorSpy();
 
   setGoalFormErrors(
     apiFailure(500, { errors: { detail: "Internal Server Error" } }),

@@ -39,7 +39,7 @@ Golden rule (Artem Zakharchenko): **a test must fail if, and only if, the intent
 
 Mock only what you do not own or cannot run in jsdom:
 
-- **Network:** MSW via `server.use(...)` inside the test that needs it. `onUnhandledRequest: "error"` is on; there are no baseline handlers.
+- **Network:** MSW via `server.use(...)` inside the test that needs it. `onUnhandledRequest: "error"` is on; there are baseline handlers.
 - **Browser APIs jsdom lacks or that need control:** `matchMedia`, clipboard, timers, `localStorage` contents.
 
 Never `vi.mock` an application module: not a sibling component (`vi.mock("./task-date")`), not a hook, not a query factory, not an axios function. A stubbed TaskDate proves TaskCard works with a fake TaskDate, which nobody ships. When a child makes the test hard, fix the **input** instead: fixed timestamps (`TZ` is pinned to UTC in `vite.config.ts`), a `Task` fixture with the fields the child needs.
@@ -64,7 +64,33 @@ it("clears the stored theme when the user returns to system", ...)
 
 ## Shape of a test
 
-Arrange, act, assert, separated by one blank line each. No section comments; the spacing is the comment.
+Use blank lines as semantic paragraph breaks. Arrange, act, observe, and assert are the usual reading order, but do not mechanically separate statement categories. Each block should express one intent; the spacing is the comment, so do not add section comments.
+
+- Keep related setup, test-specific handlers, fixtures, and `render` in one block.
+- Give every `userEvent` call its own visual paragraph. Never place two `userEvent` calls in the same paragraph, even when they form one broader interaction flow; dense action blocks are harder to scan.
+- Keep a query used solely to enable an interaction beside that `userEvent` call in the same paragraph. A blank line between `const saveButton = ...` and `await user.click(saveButton)` separates two parts of the same thought.
+- After an interaction, group queries and derived values that describe the resulting state. Put the assertions that prove the same outcome together in the following block.
+- Start a new paragraph for a new interaction, state transition, or assertion subject. Do not scatter blank lines between every declaration or assertion; excessive spacing fragments the story.
+
+In a small interaction test, those paragraphs look like this:
+
+```tsx
+it("shows the available activities when the picker opens", async () => {
+  const user = userEvent.setup();
+  render(<ActivityPicker />);
+
+  const pickerButton = screen.getByRole("button", { name: "Choose activity" });
+  await user.click(pickerButton);
+
+  const runningOption = screen.getByRole("option", { name: "Running" });
+  const cyclingOption = screen.getByRole("option", { name: "Cycling" });
+
+  expect(runningOption).toBeVisible();
+  expect(cyclingOption).toBeVisible();
+});
+```
+
+The fuller canonical example is:
 
 ```tsx
 import userEvent from "@testing-library/user-event";
@@ -87,16 +113,42 @@ it("shows the server's name error when the goal name is rejected", async () => {
   render(<CreateGoalDialog />);
 
   await user.click(screen.getByRole("button", { name: "Create goal" }));
-  const dialog = screen.getByRole("dialog", { name: "Create goal" });
-  await user.type(within(dialog).getByRole("textbox", { name: "Name" }), "Ship release");
-  await user.click(within(dialog).getByRole("button", { name: "Create goal" }));
 
-  expect(await screen.findByRole("alert")).toHaveTextContent("has already been taken");
-  expect(within(dialog).getByRole("textbox", { name: "Name" })).toHaveValue("Ship release");
+  const dialog = screen.getByRole("dialog", { name: "Create goal" });
+  const nameField = within(dialog).getByRole("textbox", { name: "Name" });
+  await user.type(nameField, "Ship release");
+
+  const submitButton = within(dialog).getByRole("button", { name: "Create goal" });
+  await user.click(submitButton);
+
+  const nameError = await screen.findByRole("alert");
+
+  expect(nameError).toHaveTextContent("has already been taken");
+  expect(nameField).toHaveValue("Ship release");
 });
 ```
 
-Rules the example encodes:
+Keep short, single-use queries and expected values inline when the whole statement remains easy to scan:
+
+```tsx
+expect(screen.getByRole("textbox", { name: "Notes" })).toHaveAccessibleDescription(
+  "Optional context.",
+);
+```
+
+Extract an element when it is reused or a meaningful name clarifies the narrative. Extract long expected text when wrapping it inside the matcher would obscure the assertion. Name the subject or expectation, not merely its DOM role or value type:
+
+```tsx
+const nameField = screen.getByRole("textbox", { name: "Name" });
+const expectedAccessibleDescription =
+  "This hint comes from the feature. Use a recognizable name. Name is unavailable.";
+
+expect(nameField).toHaveAccessibleDescription(expectedAccessibleDescription);
+```
+
+Prefer `notesField` to `textbox` and `expectedAccessibleDescription` to `description`. Do not extract a one-use value solely to create another visual phase; extraction should reduce repetition or give the reader useful meaning.
+
+Rules the canonical example encodes:
 
 - `userEvent.setup()` is the first line of the test, never in a hook.
 - Handlers, fixtures that matter to _this_ test, and `render` are all inside the test. The reader never scrolls.
@@ -118,7 +170,7 @@ Extract only infrastructure that every test in the file needs identically and th
 
 - File: `foo.spec.tsx` (or `.spec.ts` for utils) inside a `__tests__/` directory that is a sibling of the subject: `components/foo.tsx` → `components/__tests__/foo.spec.tsx`, `utils/bar.ts` → `utils/__tests__/bar.spec.ts`. The `__tests__/` folder sits in the same parent as the subject, never higher up. Relative imports start with `../` (`import { Foo } from "../foo"`; a sibling folder becomes `../../types/task`). Keep the `.spec` suffix: the lint relaxation (`max-lines-per-function: 200`, `no-magic-numbers` off) is keyed on `**/*.spec.*`, not on the directory.
 - Import `render`, `screen`, `within`, `waitFor`, `renderHook` from `@/test/test-utils`. Never from `@testing-library/react`.
-- Import `vi`, `expectTypeOf` from `vite-plus/test` when you need them. `it`, `expect` are globals.
+- `it`, `expect`, and `vi` are globals; do not import them. Import `expectTypeOf` from `vite-plus/test` when needed. Any other explicit test API import comes from `vite-plus/test`, never `vitest`.
 - Build URLs as `` `${api.defaults.baseURL}${SOME_ENDPOINT}` `` using the constants exported from `@/libs/axios`.
 - Type-level tests live next to runtime tests in the same spec (`expectTypeOf`, `@ts-expect-error`); see `src/utils/__tests__/api-filters.spec.ts`.
 - Pending-state tests use a manually resolved promise inside the handler (see `components/__tests__/task-card-actions.spec.tsx` "starts deletion immediately"). Keep that pattern.
@@ -137,5 +189,5 @@ Rules are the section headings above ("never test DOM structure", "one behavior"
 1. Use-case list written and each bullet has an `it`.
 2. `vp test <file>` is green. Paste the summary line.
 3. `vp check` passes for the touched files.
-4. Self-review against this file: two users only, no app-module mocks, no payload capture, one action per test, blank-line AAA, roles with names, `toBeVisible`, awaited events, names without "and".
+4. Self-review against this file: two users only, no app-module mocks, no payload capture, one action per test, intentional semantic grouping, one visual paragraph per `userEvent` call, roles with names, `toBeVisible`, awaited events, names without "and".
 5. Report: use cases covered, use cases deliberately skipped and why, anything in the subject that made a user-level assertion impossible (that is a design signal for the author, not a reason to reach for `container`).
