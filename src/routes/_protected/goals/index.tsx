@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { GoalsIndexPage } from "./-components/goals-index-page";
-import { goalQueries } from "@/features/goals/api/queries";
+import { goalsIndexPageQueryOptions } from "@/features/goals/api/queries";
 
 export const Route = createFileRoute("/_protected/goals/")({
   loader: async ({ context: { queryClient } }) => {
-    await queryClient.infiniteQuery({ ...goalQueries.list(), staleTime: "static" });
+    await queryClient.infiniteQuery({ ...goalsIndexPageQueryOptions(), staleTime: "static" });
   },
   component: GoalsIndexPage,
   head: () => ({

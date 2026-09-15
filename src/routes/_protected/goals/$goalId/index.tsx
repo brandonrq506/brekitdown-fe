@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { createFileRoute } from "@tanstack/react-router";
-import { goalQueries } from "@/features/goals/api/queries";
+import { goalDetailsPageQueryOptions } from "@/features/goals/api/queries";
 import { GoalStarButton } from "@/features/goals/components/goal-star-button";
 import { goalDetailsPageTasksQueryOptions } from "@/features/tasks/api/queries";
 import { TaskCard } from "@/features/tasks/components/task-card";
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_protected/goals/$goalId/")({
   component: RouteComponent,
   loader: async ({ context: { queryClient }, params: { goalId } }) => {
     const [goal] = await Promise.all([
-      queryClient.query({ ...goalQueries.detail(goalId), staleTime: "static" }),
+      queryClient.query({ ...goalDetailsPageQueryOptions(goalId), staleTime: "static" }),
       queryClient.query({
         ...goalDetailsPageTasksQueryOptions(goalId),
         staleTime: "static",
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/_protected/goals/$goalId/")({
 
 function RouteComponent() {
   const { goalId } = Route.useParams();
-  const { data } = useSuspenseQuery(goalQueries.detail(goalId));
+  const { data } = useSuspenseQuery(goalDetailsPageQueryOptions(goalId));
   const { data: tasksData } = useSuspenseQuery(goalDetailsPageTasksQueryOptions(goalId));
   const tasks = orderGoalDetailsTasks(tasksData.data);
 

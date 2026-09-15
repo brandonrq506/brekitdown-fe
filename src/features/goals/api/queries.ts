@@ -14,17 +14,18 @@ export const goalKeys = {
   detail: (referenceXid: string) => [{ ...goalKeys.details()[0], referenceXid }] as const,
 };
 
-export const goalQueries = {
-  list: (pageSize: PageSize = DEFAULT_PAGE_SIZE) =>
-    infiniteQueryOptions({
-      queryKey: goalKeys.list(pageSize),
-      queryFn: getGoals,
-      initialPageParam: FIRST_PAGE,
-      getNextPageParam: (lastPage) => lastPage.meta.next_page ?? undefined,
-    }),
-  detail: (referenceXid: string) =>
-    queryOptions({
-      queryKey: goalKeys.detail(referenceXid),
-      queryFn: getGoal,
-    }),
+export const goalsIndexPageQueryOptions = (pageSize: PageSize = DEFAULT_PAGE_SIZE) => {
+  return infiniteQueryOptions({
+    queryKey: goalKeys.list(pageSize),
+    queryFn: getGoals,
+    initialPageParam: FIRST_PAGE,
+    getNextPageParam: (lastPage) => lastPage.meta.next_page ?? undefined,
+  });
+};
+
+export const goalDetailsPageQueryOptions = (referenceXid: string) => {
+  return queryOptions({
+    queryKey: goalKeys.detail(referenceXid),
+    queryFn: getGoal,
+  });
 };

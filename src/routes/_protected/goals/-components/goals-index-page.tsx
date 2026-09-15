@@ -1,11 +1,11 @@
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
-import { goalQueries } from "@/features/goals/api/queries";
+import { goalsIndexPageQueryOptions } from "@/features/goals/api/queries";
 import { CreateGoalDialog } from "@/features/goals/components/create-goal-dialog";
 import { GoalsGrid } from "@/features/goals/components/goals-grid";
 
-const goalsQueryOptions = goalQueries.list();
+const goalsQueryOptions = goalsIndexPageQueryOptions();
 
 function getLoadMoreLabel(isFetchingNextPage: boolean, isFetchNextPageError: boolean) {
   if (isFetchingNextPage) return "Loading…";
