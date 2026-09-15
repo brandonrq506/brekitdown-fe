@@ -141,21 +141,20 @@ you already hold a reference across an interaction.
 
 ## Assert values at the right level
 
-Use `toHaveValue()` for the submitted value, `toHaveDisplayValue()` for what a
-user sees in a form control, and `toHaveFormValues()` when the form payload is the
-behavior under test.
+Use `toHaveValue()` for the submitted value and `toHaveDisplayValue()` for what a
+user sees in a form control.
 
 ```tsx
-const form = screen.getByRole("form", { name: "Profile" });
-
-expect(form).toHaveFormValues({
-  displayName: "Ada Lovelace",
-  notifications: true,
-  timezone: "America/Costa_Rica",
-});
-
+expect(screen.getByRole("textbox", { name: "Display name" })).toHaveValue("Ada Lovelace");
 expect(screen.getByRole("combobox", { name: "Timezone" })).toHaveDisplayValue("Costa Rica");
 ```
+
+`toHaveFormValues()` is **unavailable in this repo.** It throws
+`TypeError: 'escape' called on an object that is not a valid instance of CSS` —
+jest-dom 7.0.1 calls a detached `CSS.escape` via the `css.escape` package
+(`matchers-b01dabb1.mjs:1168`) and jsdom 30.0.1 rejects the unbound call. Assert
+the individual controls instead. `toHaveValue` and `toHaveDisplayValue` are
+unaffected.
 
 ```tsx
 // Avoid repeating a form-level assertion as raw control properties.

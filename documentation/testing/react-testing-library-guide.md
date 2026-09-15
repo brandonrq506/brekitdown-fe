@@ -20,7 +20,6 @@ import { render, screen } from "@/test/test-utils";
 
 it("saves the profile", async () => {
   const user = userEvent.setup();
-
   render(<ProfileForm />);
 
   await user.click(screen.getByRole("button", { name: "Save" }));

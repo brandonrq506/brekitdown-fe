@@ -2,13 +2,13 @@ import { buildGoal, goal } from "@/test/store/goals";
 import { buildTask, task } from "@/test/store/tasks";
 import { buildTimeEntry, runningTimeEntry } from "@/test/store/time-entries";
 
-const builders = [
-  { entity: "goal", build: buildGoal, storedFixture: goal },
-  { entity: "task", build: buildTask, storedFixture: task },
-  { entity: "time entry", build: buildTimeEntry, storedFixture: runningTimeEntry },
+const builders: [entity: string, build: () => object, storedFixture: object][] = [
+  ["goal", buildGoal, goal],
+  ["task", buildTask, task],
+  ["time entry", buildTimeEntry, runningTimeEntry],
 ];
 
-it.each(builders)("builds a $entity that no other test can reach", ({ build, storedFixture }) => {
+it.each(builders)("builds a %s that no other test can reach", (_entity, build, storedFixture) => {
   expect(build()).not.toBe(storedFixture);
   expect(build()).not.toBe(build());
 });

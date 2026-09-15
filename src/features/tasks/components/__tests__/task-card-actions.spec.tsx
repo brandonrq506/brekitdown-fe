@@ -28,7 +28,7 @@ const TaskListProbe = () => {
 };
 
 /** Base UI only opens the menu from the keyboard in jsdom, so a click on the trigger is not enough. */
-const openTaskActions = async (user: User, selectedTask: { name: string }) => {
+const openTaskActions = async (user: User, selectedTask: typeof task) => {
   const card = screen.getByRole("article", { name: selectedTask.name });
   within(card)
     .getByRole("button", { name: `Task actions for ${selectedTask.name}` })
@@ -55,15 +55,15 @@ it("starts deleting the task without asking for confirmation", async () => {
 
   await user.click(screen.getByRole("menuitem", { name: "Delete task" }));
 
-  const taskActionsButton = screen.getByRole("button", { name: `Task actions for ${task.name}` });
+  const taskActionsName = `Task actions for ${task.name}`;
 
   expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
-  expect(taskActionsButton).toBeDisabled();
+  expect(screen.getByRole("button", { name: taskActionsName })).toBeDisabled();
 
   resolveRequest();
   await waitFor(() => {
-    expect(taskActionsButton).toBeEnabled();
+    expect(screen.getByRole("button", { name: taskActionsName })).toBeEnabled();
   });
 });
 

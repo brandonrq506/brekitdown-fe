@@ -164,16 +164,20 @@ Rules the canonical example encodes:
 
 Extract only infrastructure that every test in the file needs identically and that carries no test-specific meaning: a `TaskListProbe` consumer component, an `openTaskActions(user, task)` helper that hides a library quirk, a base `task` fixture spread with per-test overrides. Anything that decides _what this test is about_ stays inline. Duplication that keeps a test readable is correct.
 
-`it.each` is welcome for pure functions and for enumerations (`Object.values(TASK_STATUS)`). One `describe` per file at most; never nested `describe`. This repo currently uses zero `describe` blocks and that is fine.
+`it.each` is welcome for pure functions and for enumerations (`Object.values(TASK_STATUS)`). Rows are **arrays** typed with a labeled tuple (`it.each<[days: number, word: string, locale: string]>`), named with printf (`%s`, `%d`). Placeholders consume elements left to right from index 0, so order the tuple to put what belongs in the name first; a trailing element the name never references is simply ignored. Never use `$var` or `$0` — Vitest renders those through pretty-format, so strings arrive quoted and `0` becomes `+0` (`builds a 'goal' …` instead of `builds a goal …`). Those names are what a reviewer reads in CI.
+
+Reach for a table when the rows differ in one parameter and each row is an independent fact. Keep a ladder of `expect`s in one test when the assertions form a progression or a boundary contrast that only means something read together — a coarsening scale (`6 days ago` → `last week` → `last month`), or the two sides of a midnight. The test to apply: **split when the assertions can fail independently; keep them together when one regression breaks all of them.**
+
+One `describe` per file at most; never nested `describe`. This repo currently uses zero `describe` blocks and that is fine.
 
 ## Repo conventions
 
 - File: `foo.spec.tsx` (or `.spec.ts` for utils) inside a `__tests__/` directory that is a sibling of the subject: `components/foo.tsx` → `components/__tests__/foo.spec.tsx`, `utils/bar.ts` → `utils/__tests__/bar.spec.ts`. The `__tests__/` folder sits in the same parent as the subject, never higher up. Relative imports start with `../` (`import { Foo } from "../foo"`; a sibling folder becomes `../../types/task`). Keep the `.spec` suffix: the lint relaxation (`max-lines-per-function: 200`, `no-magic-numbers` off) is keyed on `**/*.spec.*`, not on the directory.
 - Import `render`, `screen`, `within`, `waitFor`, `renderHook` from `@/test/test-utils`. Never from `@testing-library/react`.
 - `it`, `expect`, and `vi` are globals; do not import them. Import `expectTypeOf` from `vite-plus/test` when needed. Any other explicit test API import comes from `vite-plus/test`, never `vitest`.
-- Build URLs as `` `${api.defaults.baseURL}${SOME_ENDPOINT}` `` using the constants exported from `@/libs/axios`.
+- Build URLs with the `apiRoutes` helpers in `@/test/handlers/api-routes` (`apiRoutes.goals`, `apiRoutes.task(referenceXid)`). Never hand-assemble a URL in a spec.
 - Type-level tests live next to runtime tests in the same spec (`expectTypeOf`, `@ts-expect-error`); see `src/utils/__tests__/api-filters.spec.ts`.
-- Pending-state tests use a manually resolved promise inside the handler (see `components/__tests__/task-card-actions.spec.tsx` "starts deletion immediately"). Keep that pattern.
+- Pending-state tests use a manually resolved promise inside the handler (see `components/__tests__/task-card-actions.spec.tsx` "starts deleting the task without asking for confirmation"). Keep that pattern. Release the gate at the end and await the settle: that tail is teardown for the test's own handler, not a second behavior. Re-query inside `waitFor` rather than reusing a node captured before the interaction — React reuses DOM nodes, so a captured reference cannot notice an accessible name that changed.
 
 ## Review mode
 

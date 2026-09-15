@@ -1,14 +1,14 @@
 import { TaskCard } from "../task-card";
-import { TASK_STATUS } from "../../types/task";
+import { TASK_STATUS, type TASK_STATUS as TaskStatus } from "../../types/task";
 import { buildTask, task } from "@/test/store/tasks";
 import { render, screen } from "@/test/test-utils";
 
-const statusIcons = [
-  { status: TASK_STATUS.SCHEDULED, label: "Scheduled" },
-  { status: TASK_STATUS.IN_PROGRESS, label: "In progress" },
-  { status: TASK_STATUS.COMPLETED, label: "Completed" },
-  { status: TASK_STATUS.DROPPED, label: "Dropped" },
-  { status: TASK_STATUS.ON_HOLD, label: "On hold" },
+const statusIcons: [label: string, status: TaskStatus][] = [
+  ["Scheduled", TASK_STATUS.SCHEDULED],
+  ["In progress", TASK_STATUS.IN_PROGRESS],
+  ["Completed", TASK_STATUS.COMPLETED],
+  ["Dropped", TASK_STATUS.DROPPED],
+  ["On hold", TASK_STATUS.ON_HOLD],
 ];
 
 /** Both date labels are read against the clock, and `Date` is the only clock Vitest can fake. */
@@ -35,7 +35,7 @@ it("shows the task's description", () => {
   expect(screen.getByText(task.description)).toBeVisible();
 });
 
-it.each(statusIcons)("shows the $label status icon on a $status task", ({ status, label }) => {
+it.each(statusIcons)("shows the %s status icon", (label, status) => {
   render(<TaskCard task={buildTask({ status })} />);
 
   expect(screen.getByRole("img", { name: label })).toBeVisible();
