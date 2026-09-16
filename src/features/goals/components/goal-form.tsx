@@ -51,14 +51,16 @@ export const GoalForm = ({
 
   return (
     <form noValidate onSubmit={handleSubmit(submit)}>
-      <FieldGroup className="gap-5">
+      <FieldGroup className="gap-4">
         <InputField
-          label="Name"
-          description={`Use ${GOAL_NAME_MAX_LENGTH} characters or fewer.`}
+          label="Goal title"
+          placeholder="Goal title"
           error={errors.name?.message}
           required
           maxLength={GOAL_NAME_MAX_LENGTH}
           autoComplete="off"
+          autoFocus
+          className="h-auto rounded-sm border-0 bg-transparent px-1 py-1 text-xl font-medium shadow-none focus-visible:border-transparent focus-visible:bg-muted/40 focus-visible:ring-0 md:text-xl dark:bg-transparent"
           {...register("name", {
             required: "Goal name is required.",
             maxLength: {
@@ -70,9 +72,10 @@ export const GoalForm = ({
         />
         <TextareaField
           label="Description"
-          description="Add any context that will help you work toward this goal."
+          placeholder="Add a description…"
           error={errors.description?.message}
           rows={4}
+          className="min-h-24 resize-none rounded-sm border-0 bg-transparent px-1 py-1 shadow-none focus-visible:border-transparent focus-visible:bg-muted/40 focus-visible:ring-0 dark:bg-transparent"
           {...register("description")}
         />
         {formError !== undefined && <FieldError>{formError}</FieldError>}

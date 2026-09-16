@@ -16,6 +16,7 @@ type RenderableNode = Exclude<ReactNode, null | boolean>;
 
 type FieldControlProps = {
   label: ReactNode;
+  hideLabel?: boolean;
   description?: RenderableNode;
   error?: string;
 };
@@ -67,6 +68,7 @@ export type InputFieldProps = React.ComponentProps<typeof Input> & FieldControlP
 export const InputField = ({
   id,
   label,
+  hideLabel = true,
   description,
   error,
   "aria-describedby": ariaDescribedBy,
@@ -79,7 +81,9 @@ export const InputField = ({
 
   return (
     <Field data-disabled={disabled === true || undefined} data-invalid={invalid || undefined}>
-      <FieldLabel htmlFor={controlId}>{label}</FieldLabel>
+      <FieldLabel className={hideLabel ? "sr-only" : undefined} htmlFor={controlId}>
+        {label}
+      </FieldLabel>
       <Input
         {...props}
         id={controlId}
@@ -98,6 +102,7 @@ export type TextareaFieldProps = React.ComponentProps<typeof Textarea> & FieldCo
 export const TextareaField = ({
   id,
   label,
+  hideLabel = true,
   description,
   error,
   "aria-describedby": ariaDescribedBy,
@@ -110,7 +115,9 @@ export const TextareaField = ({
 
   return (
     <Field data-disabled={disabled === true || undefined} data-invalid={invalid || undefined}>
-      <FieldLabel htmlFor={controlId}>{label}</FieldLabel>
+      <FieldLabel className={hideLabel ? "sr-only" : undefined} htmlFor={controlId}>
+        {label}
+      </FieldLabel>
       <Textarea
         {...props}
         id={controlId}

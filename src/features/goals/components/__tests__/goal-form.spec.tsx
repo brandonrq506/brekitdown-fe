@@ -21,7 +21,7 @@ const renderForm = (onSubmit: (values: GoalFormValues) => Promise<void>, onCance
   );
 
 const typeName = async (user: ReturnType<typeof userEvent.setup>, name: string) => {
-  await user.type(screen.getByRole("textbox", { name: "Name" }), name);
+  await user.type(screen.getByRole("textbox", { name: "Goal title" }), name);
 };
 
 const submit = async (user: ReturnType<typeof userEvent.setup>) => {
@@ -101,7 +101,14 @@ it("preserves a failed submission for correction", async () => {
   await submit(user);
 
   expect(await screen.findByRole("alert")).toHaveTextContent(FORM_ERROR_MESSAGE);
-  expect(screen.getByRole("textbox", { name: "Name" })).toHaveValue("Keep this value");
+  expect(screen.getByRole("textbox", { name: "Goal title" })).toHaveValue("Keep this value");
+});
+
+it("shows editor prompts in empty goal fields", () => {
+  renderForm(() => Promise.resolve());
+
+  expect(screen.getByLabelText("Goal title")).toHaveAttribute("placeholder", "Goal title");
+  expect(screen.getByLabelText("Description")).toHaveAttribute("placeholder", "Add a description…");
 });
 
 it("cancels without submitting", async () => {
