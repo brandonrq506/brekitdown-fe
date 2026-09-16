@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import App from "@/app";
+import { TaskCardReference } from "./-components/task-card-reference";
 
 export const Route = createFileRoute("/_protected/")({
   component: RouteComponent,
@@ -13,5 +13,5 @@ export const Route = createFileRoute("/_protected/")({
 });
 
 function RouteComponent() {
-  return <App />;
+  return <TaskCardReference />;
 }
