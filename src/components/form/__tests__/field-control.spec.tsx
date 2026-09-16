@@ -50,6 +50,12 @@ it("gives the control the form name the caller supplied", () => {
   expect(screen.getByRole("textbox", { name: "Name" })).toHaveAttribute("name", "goalName");
 });
 
+it("keeps the hidden label associated with a visible control", () => {
+  render(<InputField label="Goal title" placeholder="Goal title" />);
+
+  expect(screen.getByLabelText("Goal title")).toBeVisible();
+});
+
 it("notifies the caller while the user types", async () => {
   const user = userEvent.setup();
   const onChange = vi.fn();
