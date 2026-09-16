@@ -30,3 +30,7 @@ export interface Task extends ApiResource {
 export interface TasksResponse {
   data: Task[];
 }
+
+export interface TaskResponse {
+  data: Task;
+}
