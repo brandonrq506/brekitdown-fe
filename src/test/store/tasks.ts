@@ -32,6 +32,8 @@ export const tasks: Task[] = [task];
 
 export const newlyCreatedTask = buildTask({
   reference_xid: "task_created",
+  inserted_at: "2026-08-31T12:00:00Z",
+  updated_at: "2026-08-31T12:00:00Z",
   name: "Draft the outline",
   description: "",
   status: TASK_STATUS.SCHEDULED,

@@ -34,3 +34,10 @@ export interface TasksResponse {
 export interface TaskResponse {
   data: Task;
 }
+
+export type TaskFormValues = Pick<Task, "name" | "description">;
+
+/** This creation flow always creates a root task in the current goal. */
+export interface CreateTaskPayload {
+  task: TaskFormValues & { goal_reference_xid: string };
+}
