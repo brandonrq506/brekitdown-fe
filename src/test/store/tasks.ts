@@ -29,3 +29,11 @@ export const buildTask = (overrides?: Partial<Task>): Task => {
 export const task = buildTask();
 
 export const tasks: Task[] = [task];
+
+export const newlyCreatedTask = buildTask({
+  reference_xid: "task_created",
+  name: "Draft the outline",
+  description: "",
+  status: TASK_STATUS.SCHEDULED,
+  due_at: null,
+});
