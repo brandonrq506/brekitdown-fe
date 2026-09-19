@@ -35,9 +35,11 @@ export interface TaskResponse {
   data: Task;
 }
 
-export type TaskFormValues = Pick<Task, "name" | "description">;
+export interface TaskFormValues extends Pick<Task, "name" | "description"> {
+  dueAt: Date | null;
+}
 
 /** This creation flow always creates a root task in the current goal. */
 export interface CreateTaskPayload {
-  task: TaskFormValues & { goal_reference_xid: string };
+  task: Pick<Task, "name" | "description" | "due_at"> & { goal_reference_xid: string };
 }

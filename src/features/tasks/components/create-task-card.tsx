@@ -1,4 +1,4 @@
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { CircleIcon } from "lucide-react";
 
 import { InputField, TextareaField } from "@/components/form/field-control";
@@ -8,6 +8,7 @@ import { FieldError } from "@/components/ui/field";
 import { TASK_DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants/task";
 import type { TaskFormValues } from "../types/task";
 import { setTaskFormErrors } from "../utils/task-form-errors";
+import { TaskDueDatePicker } from "./task-due-date-picker";
 
 interface Props {
   onSubmit: (values: TaskFormValues) => Promise<void>;
@@ -18,11 +19,14 @@ interface Props {
 export const CreateTaskCard = ({ onSubmit, onCancel }: Props) => {
   const {
     clearErrors,
+    control,
     formState: { errors, isSubmitting },
     handleSubmit,
     register,
     setError,
-  } = useForm<TaskFormValues>({ defaultValues: { name: "", description: "" } });
+  } = useForm<TaskFormValues>({
+    defaultValues: { name: "", description: "", dueAt: null },
+  });
 
   const submit: SubmitHandler<TaskFormValues> = async (values) => {
     clearErrors();
@@ -58,7 +62,7 @@ export const CreateTaskCard = ({ onSubmit, onCancel }: Props) => {
             })}
           />
         </CardHeader>
-        <CardContent className="px-0 sm:ml-8">
+        <CardContent className="space-y-4 px-0 sm:ml-8">
           <TextareaField
             label="Description"
             placeholder="Add a description…"
@@ -73,6 +77,17 @@ export const CreateTaskCard = ({ onSubmit, onCancel }: Props) => {
                 message: `Description must be ${TASK_DESCRIPTION_MAX_LENGTH} characters or fewer.`,
               },
             })}
+          />
+          <Controller
+            control={control}
+            name="dueAt"
+            render={({ field }) => (
+              <TaskDueDatePicker
+                disabled={isSubmitting}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
           />
           {errors.root?.server?.message !== undefined && (
             <FieldError>{errors.root.server.message}</FieldError>
