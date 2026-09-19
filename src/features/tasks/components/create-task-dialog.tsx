@@ -41,7 +41,9 @@ export const CreateTaskDialog = ({ goalReferenceXid }: Props) => {
       >
         <DialogHeader>
           <DialogTitle>Create task</DialogTitle>
-          <DialogDescription>Give your task a title and an optional description.</DialogDescription>
+          <DialogDescription>
+            Give your task a title, an optional description, and a due date.
+          </DialogDescription>
         </DialogHeader>
         <CreateTaskCard
           onSubmit={async (values) => {

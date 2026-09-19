@@ -1,4 +1,4 @@
-import { render, screen, waitFor, waitForElementToBeRemoved, within } from "@/test/test-utils";
+import { render, screen, waitFor, within } from "@/test/test-utils";
 import { http, HttpResponse } from "msw";
 import userEvent from "@testing-library/user-event";
 
@@ -21,6 +21,11 @@ const openDialog = async (user: User) => {
 
   return screen.findByRole("dialog", { name: "Create goal" });
 };
+
+const waitForCreatedGoalNavigation = (router: ReturnType<typeof render>["router"]) =>
+  waitFor(() => {
+    expect(router.state.location.pathname).toBe("/goals/goal_created");
+  });
 
 const dismissals: Dismissal[] = [
   {
@@ -80,7 +85,7 @@ it("shows a disabled Creating… button while the goal is being created", async 
   const user = userEvent.setup();
   const { handler, resolveRequest } = gatedCreateGoalHandler();
   server.use(handler);
-  render(<CreateGoalDialog />);
+  const { router } = render(<CreateGoalDialog />);
 
   const dialog = await openDialog(user);
 
@@ -91,14 +96,14 @@ it("shows a disabled Creating… button while the goal is being created", async 
   expect(within(dialog).getByRole("button", { name: "Creating…" })).toBeDisabled();
 
   resolveRequest();
-  await waitForElementToBeRemoved(() => screen.queryByRole("button", { name: "Creating…" }));
+  await waitForCreatedGoalNavigation(router);
 });
 
 it("disables the close button while the goal is being created", async () => {
   const user = userEvent.setup();
   const { handler, resolveRequest } = gatedCreateGoalHandler();
   server.use(handler);
-  render(<CreateGoalDialog />);
+  const { router } = render(<CreateGoalDialog />);
 
   const dialog = await openDialog(user);
 
@@ -109,14 +114,14 @@ it("disables the close button while the goal is being created", async () => {
   expect(within(dialog).getByRole("button", { name: "Close" })).toBeDisabled();
 
   resolveRequest();
-  await waitForElementToBeRemoved(() => screen.queryByRole("button", { name: "Creating…" }));
+  await waitForCreatedGoalNavigation(router);
 });
 
 it("ignores Escape while the goal is being created", async () => {
   const user = userEvent.setup();
   const { handler, resolveRequest } = gatedCreateGoalHandler();
   server.use(handler);
-  render(<CreateGoalDialog />);
+  const { router } = render(<CreateGoalDialog />);
 
   const dialog = await openDialog(user);
 
@@ -129,14 +134,14 @@ it("ignores Escape while the goal is being created", async () => {
   expect(screen.getByRole("dialog", { name: "Create goal" })).toBeVisible();
 
   resolveRequest();
-  await waitForElementToBeRemoved(() => screen.queryByRole("button", { name: "Creating…" }));
+  await waitForCreatedGoalNavigation(router);
 });
 
 it("ignores a backdrop click while the goal is being created", async () => {
   const user = userEvent.setup();
   const { handler, resolveRequest } = gatedCreateGoalHandler();
   server.use(handler);
-  render(<CreateGoalDialog />);
+  const { router } = render(<CreateGoalDialog />);
 
   const dialog = await openDialog(user);
 
@@ -149,7 +154,7 @@ it("ignores a backdrop click while the goal is being created", async () => {
   expect(screen.getByRole("dialog", { name: "Create goal" })).toBeVisible();
 
   resolveRequest();
-  await waitForElementToBeRemoved(() => screen.queryByRole("button", { name: "Creating…" }));
+  await waitForCreatedGoalNavigation(router);
 });
 
 it("navigates to the created goal after a successful request", async () => {
