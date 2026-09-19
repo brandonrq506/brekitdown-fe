@@ -13,6 +13,7 @@ export default defineConfig({
     "*": "vp check --fix",
   },
   fmt: {
+    bracketSameLine: true,
     ignorePatterns: ["src/routeTree.gen.ts"],
     sortTailwindcss: {
       stylesheet: "./src/index.css",

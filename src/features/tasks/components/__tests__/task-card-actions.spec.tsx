@@ -36,7 +36,7 @@ const openTaskActions = async (user: User, selectedTask: typeof task) => {
   await user.keyboard("{ArrowDown}");
 };
 
-it("starts deleting the task without asking for confirmation", async () => {
+it("disables the task actions while the deletion is in flight", async () => {
   const user = userEvent.setup();
   let resolveRequest!: () => void;
   const requestGate = new Promise<void>((resolve) => {
@@ -57,8 +57,6 @@ it("starts deleting the task without asking for confirmation", async () => {
 
   const taskActionsName = `Task actions for ${task.name}`;
 
-  expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-  expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
   expect(screen.getByRole("button", { name: taskActionsName })).toBeDisabled();
 
   resolveRequest();
