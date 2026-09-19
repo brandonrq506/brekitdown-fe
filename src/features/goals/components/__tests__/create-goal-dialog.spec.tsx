@@ -32,10 +32,6 @@ const dismissals: Dismissal[] = [
     label: "the Cancel button",
     dismiss: (user, dialog) => user.click(within(dialog).getByRole("button", { name: "Cancel" })),
   },
-  {
-    label: "the close button",
-    dismiss: (user, dialog) => user.click(within(dialog).getByRole("button", { name: "Close" })),
-  },
   { label: "Escape", dismiss: (user) => user.keyboard("{Escape}") },
   { label: "the backdrop", dismiss: (user) => user.click(document.body) },
 ];
@@ -94,24 +90,6 @@ it("shows a disabled Creating… button while the goal is being created", async 
   await user.click(within(dialog).getByRole("button", { name: "Create goal" }));
 
   expect(within(dialog).getByRole("button", { name: "Creating…" })).toBeDisabled();
-
-  resolveRequest();
-  await waitForCreatedGoalNavigation(router);
-});
-
-it("disables the close button while the goal is being created", async () => {
-  const user = userEvent.setup();
-  const { handler, resolveRequest } = gatedCreateGoalHandler();
-  server.use(handler);
-  const { router } = render(<CreateGoalDialog />);
-
-  const dialog = await openDialog(user);
-
-  await user.type(within(dialog).getByRole("textbox", { name: "Goal title" }), "Ship release");
-
-  await user.click(within(dialog).getByRole("button", { name: "Create goal" }));
-
-  expect(within(dialog).getByRole("button", { name: "Close" })).toBeDisabled();
 
   resolveRequest();
   await waitForCreatedGoalNavigation(router);

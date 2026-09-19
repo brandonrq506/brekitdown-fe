@@ -3,8 +3,8 @@ import { CircleIcon } from "lucide-react";
 
 import { InputField, TextareaField } from "@/components/form/field-control";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { FieldError } from "@/components/ui/field";
+import { DialogFooter } from "@/components/ui/dialog";
+import { FieldError, FieldGroup } from "@/components/ui/field";
 import { TASK_DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants/task";
 import type { TaskFormValues } from "../types/task";
 import { setTaskFormErrors } from "../utils/task-form-errors";
@@ -16,7 +16,7 @@ interface Props {
 }
 
 /** Owns the draft and validation; the caller owns persistence and dismissal. */
-export const CreateTaskCard = ({ onSubmit, onCancel }: Props) => {
+export const CreateTaskForm = ({ onSubmit, onCancel }: Props) => {
   const {
     clearErrors,
     control,
@@ -39,15 +39,14 @@ export const CreateTaskCard = ({ onSubmit, onCancel }: Props) => {
 
   return (
     <form noValidate aria-label="New task" aria-busy={isSubmitting} onSubmit={handleSubmit(submit)}>
-      <Card className="gap-5 bg-transparent p-0 shadow-none ring-0">
-        <CardHeader className="grid grid-cols-[1.5rem_minmax(0,1fr)] items-start gap-3 px-0">
+      <FieldGroup className="gap-4">
+        <div className="grid grid-cols-[1.5rem_minmax(0,1fr)] items-start gap-3">
           <CircleIcon aria-hidden="true" className="mt-2 size-5 text-muted-foreground" />
           <InputField
             label="Task title"
             placeholder="Task title"
             error={errors.name?.message}
             required
-            maxLength={TASK_NAME_MAX_LENGTH}
             autoComplete="off"
             autoFocus
             readOnly={isSubmitting}
@@ -61,47 +60,44 @@ export const CreateTaskCard = ({ onSubmit, onCancel }: Props) => {
               setValueAs: (value: string) => value.trim(),
             })}
           />
-        </CardHeader>
-        <CardContent className="space-y-4 px-0 sm:ml-8">
-          <TextareaField
-            label="Description"
-            placeholder="Add a description…"
-            error={errors.description?.message}
-            rows={4}
-            maxLength={TASK_DESCRIPTION_MAX_LENGTH}
-            readOnly={isSubmitting}
-            className="min-h-24 resize-y rounded-sm border-0 bg-transparent px-1 py-1 shadow-none focus-visible:border-transparent focus-visible:bg-muted/40 focus-visible:ring-0 dark:bg-transparent"
-            {...register("description", {
-              maxLength: {
-                value: TASK_DESCRIPTION_MAX_LENGTH,
-                message: `Description must be ${TASK_DESCRIPTION_MAX_LENGTH} characters or fewer.`,
-              },
-            })}
-          />
-          <Controller
-            control={control}
-            name="dueAt"
-            render={({ field }) => (
-              <TaskDueDatePicker
-                disabled={isSubmitting}
-                value={field.value}
-                onChange={field.onChange}
-              />
-            )}
-          />
-          {errors.root?.server?.message !== undefined && (
-            <FieldError>{errors.root.server.message}</FieldError>
+        </div>
+        <TextareaField
+          label="Description"
+          placeholder="Add a description…"
+          error={errors.description?.message}
+          rows={4}
+          readOnly={isSubmitting}
+          className="min-h-24 resize-none rounded-sm border-0 bg-transparent px-1 py-1 shadow-none focus-visible:border-transparent focus-visible:bg-muted/40 focus-visible:ring-0 dark:bg-transparent"
+          {...register("description", {
+            maxLength: {
+              value: TASK_DESCRIPTION_MAX_LENGTH,
+              message: `Description must be ${TASK_DESCRIPTION_MAX_LENGTH} characters or fewer.`,
+            },
+          })}
+        />
+        <Controller
+          control={control}
+          name="dueAt"
+          render={({ field }) => (
+            <TaskDueDatePicker
+              disabled={isSubmitting}
+              value={field.value}
+              onChange={field.onChange}
+            />
           )}
-        </CardContent>
-        <CardFooter className="flex-col-reverse gap-2 border-t px-0 pt-4 sm:ml-8 sm:flex-row sm:justify-end">
+        />
+        {errors.root?.server?.message !== undefined && (
+          <FieldError>{errors.root.server.message}</FieldError>
+        )}
+        <DialogFooter>
           <Button type="button" variant="outline" disabled={isSubmitting} onClick={onCancel}>
             Cancel
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Creating…" : "Create task"}
           </Button>
-        </CardFooter>
-      </Card>
+        </DialogFooter>
+      </FieldGroup>
     </form>
   );
 };

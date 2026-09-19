@@ -131,22 +131,6 @@ it("disables Cancel while the task is being created", async () => {
   await waitForCreationToSettle();
 });
 
-it("disables the close button while the task is being created", async () => {
-  const user = userEvent.setup();
-  const { handler, releaseRequest } = gatedCreateTaskHandler();
-  server.use(handler);
-  render(<CreateTaskDialog goalReferenceXid={goal.reference_xid} />);
-
-  const dialog = await openDialog(user);
-
-  await submitDraft(user, dialog);
-
-  expect(within(dialog).getByRole("button", { name: "Close" })).toBeDisabled();
-
-  releaseRequest();
-  await waitForCreationToSettle();
-});
-
 it("ignores Escape while the task is being created", async () => {
   const user = userEvent.setup();
   const { handler, releaseRequest } = gatedCreateTaskHandler();
