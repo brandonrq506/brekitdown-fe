@@ -1,5 +1,5 @@
 import { endOfLocalDay } from "../task-due-date";
-import { toCreateTaskPayload } from "../task-payload";
+import { toCreateTaskPayload, toUpdateTaskDueAtPayload } from "../task-payload";
 
 it("trims the submitted values into a root task for the current goal", () => {
   expect(
@@ -51,4 +51,14 @@ it.each<[date: string, expected: string]>([
   vi.stubEnv("TZ", "America/New_York");
 
   expect(endOfLocalDay(new Date(`${date}T00:00:00`)).toISOString()).toBe(expected);
+});
+
+it("sends the resolved deadline as the only change", () => {
+  expect(toUpdateTaskDueAtPayload(new Date("2026-09-21T05:59:59Z"))).toEqual({
+    task: { due_at: "2026-09-21T05:59:59.000Z" },
+  });
+});
+
+it("clears the deadline when no day is chosen", () => {
+  expect(toUpdateTaskDueAtPayload(null)).toEqual({ task: { due_at: null } });
 });
