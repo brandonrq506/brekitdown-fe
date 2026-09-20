@@ -1,9 +1,9 @@
 import { useId } from "react";
-import { CalendarIcon } from "lucide-react";
 
 import { TASK_STATUS_PRESENTATION } from "../constants/task-status-presentation";
 import type { Task } from "../types/task";
 import { TaskCardActions } from "./task-card-actions";
+import { TaskCardDueDate } from "./task-card-due-date";
 import { TaskDate } from "./task-date";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
@@ -58,11 +58,7 @@ export const TaskCard = ({ task }: Props) => {
               </dd>
             </div>
             <div className="flex flex-wrap items-center gap-x-2">
-              <dt className="flex items-center" title="Due date">
-                <CalendarIcon aria-hidden="true" className="size-3.5" />
-                <span className="sr-only">Due</span>
-              </dt>
-              <dd>{task.due_at === null ? "No due date" : <TaskDate timestamp={task.due_at} />}</dd>
+              <TaskCardDueDate task={task} />
             </div>
             <div>
               <dt className="sr-only">Notes</dt>

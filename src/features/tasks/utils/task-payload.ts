@@ -1,4 +1,4 @@
-import type { CreateTaskPayload, TaskFormValues } from "../types/task";
+import type { CreateTaskPayload, TaskFormValues, UpdateTaskPayload } from "../types/task";
 
 export const toCreateTaskPayload = (
   { name, description, dueAt }: TaskFormValues,
@@ -10,4 +10,8 @@ export const toCreateTaskPayload = (
     due_at: dueAt?.toISOString() ?? null,
     goal_reference_xid: goalReferenceXid,
   },
+});
+
+export const toUpdateTaskDueAtPayload = (dueAt: Date | null): UpdateTaskPayload => ({
+  task: { due_at: dueAt?.toISOString() ?? null },
 });

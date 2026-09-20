@@ -44,3 +44,7 @@ export interface TaskFormValues extends Pick<Task, "name" | "description"> {
 export interface CreateTaskPayload {
   task: Pick<Task, "name" | "description" | "due_at"> & { goal_reference_xid: string };
 }
+
+export interface UpdateTaskPayload {
+  task: Partial<Pick<Task, "name" | "description" | "due_at">>;
+}
