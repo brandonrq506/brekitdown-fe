@@ -38,7 +38,7 @@ it("shows the task's description", () => {
 it.each(statusIcons)("shows the %s status icon", (label, status) => {
   render(<TaskCard task={buildTask({ status })} />);
 
-  expect(screen.getByRole("img", { name: label })).toBeVisible();
+  expect(screen.getByRole("button", { name: `Status: ${label}` })).toBeVisible();
 });
 
 it("shows how long ago the task was created", () => {
