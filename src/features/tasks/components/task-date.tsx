@@ -6,7 +6,10 @@ interface TaskDateProps {
 
 /** Keeps the machine-readable instant, the short label and the exact date travelling together. */
 export const TaskDate = ({ timestamp }: TaskDateProps) => (
-  <time dateTime={timestamp} title={formatExactTaskDate(timestamp)}>
+  <time
+    dateTime={timestamp}
+    title={formatExactTaskDate(timestamp)}
+    className="inline-block first-letter:uppercase">
     {formatTaskDate(timestamp)}
   </time>
 );
