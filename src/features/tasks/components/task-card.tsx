@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, MessageSquareIcon } from "lucide-react";
 
 import { TASK_STATUS_PRESENTATION } from "../constants/task-status-presentation";
 import type { Task } from "../types/task";
@@ -20,15 +20,13 @@ export const TaskCard = ({ task }: Props) => {
     <Card
       role="article"
       aria-labelledby={titleId}
-      className="min-h-40 w-full min-w-0 gap-5 p-5 sm:p-6"
-    >
+      className="min-h-40 w-full min-w-0 gap-5 p-5 sm:p-6">
       <CardHeader className="grid grid-cols-[1.5rem_minmax(0,1fr)] items-start gap-x-3 gap-y-3 px-0 sm:grid-cols-[1.5rem_minmax(0,1fr)_auto]">
         <span
           role="img"
           aria-label={label}
           title={label}
-          className="mt-0.5 shrink-0 text-muted-foreground"
-        >
+          className="mt-0.5 shrink-0 text-muted-foreground">
           <StatusIcon aria-hidden="true" className="size-5" />
         </span>
         <CardTitle className="min-w-0">
@@ -59,6 +57,13 @@ export const TaskCard = ({ task }: Props) => {
               <span className="sr-only">Due</span>
             </dt>
             <dd>{task.due_at === null ? "No due date" : <TaskDate timestamp={task.due_at} />}</dd>
+          </div>
+          <div className="flex flex-wrap items-center gap-x-2">
+            <dt className="flex items-center" title="Notes">
+              <MessageSquareIcon aria-hidden="true" className="size-3.5" />
+              <span className="sr-only">Notes</span>
+            </dt>
+            <dd>{task.notes_count}</dd>
           </div>
         </dl>
       </CardFooter>

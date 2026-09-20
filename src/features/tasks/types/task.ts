@@ -21,6 +21,7 @@ export interface Task extends ApiResource {
   status: TASK_STATUS;
   due_at: string | null;
   goal_reference_xid: string | null;
+  notes_count: number;
   parent_reference_xid: string | null;
   tags: TaskTag[];
   time_entries: TimeEntry[];

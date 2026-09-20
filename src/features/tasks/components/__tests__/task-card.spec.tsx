@@ -57,6 +57,12 @@ it("shows the day the task is due", () => {
   expect(screen.getByRole("article", { name: task.name })).toHaveTextContent(/Due\s*Sep 28/);
 });
 
+it("shows how many notes the task has", () => {
+  render(<TaskCard task={task} />);
+
+  expect(screen.getByRole("article", { name: task.name })).toHaveTextContent(/Notes\s*5/);
+});
+
 it("tells the user the task has no due date when none is set", () => {
   render(<TaskCard task={buildTask({ due_at: null })} />);
 
