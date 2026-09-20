@@ -36,8 +36,7 @@ export const ActiveTaskCardReference = ({
     <Card
       role="article"
       aria-labelledby={titleId}
-      className="overflow-visible border border-primary/50 px-5 py-5 shadow-md ring-0 sm:px-6"
-    >
+      className="overflow-visible border border-primary/50 px-5 py-5 shadow-md ring-0 sm:px-6">
       <CardHeader className="grid grid-cols-[1.5rem_minmax(0,1fr)] items-start gap-x-3 gap-y-3 px-0 sm:grid-cols-[1.5rem_minmax(0,1fr)_auto]">
         <StatusControl status={status} setStatus={setStatus} />
         <div className="min-w-0">
@@ -91,8 +90,7 @@ export const ActiveTaskCardReference = ({
             variant="ghost"
             size="sm"
             className="h-8 px-2 text-xs font-normal text-muted-foreground"
-            title="Open notes"
-          >
+            title="Open notes">
             <MessageSquareIcon aria-hidden="true" className="size-3.5" />3
           </Button>
           <span className="ml-auto h-8 content-center text-xs text-muted-foreground/70">

@@ -11,14 +11,12 @@ function RouteComponent() {
       <header className="border-b">
         <nav
           aria-label="Main navigation"
-          className="mx-auto flex w-full max-w-5xl items-center gap-4 px-6 py-4"
-        >
+          className="mx-auto flex w-full max-w-5xl items-center gap-4 px-6 py-4">
           <div className="flex gap-4">
             <Link
               to="/"
               activeOptions={{ exact: true }}
-              className="[&.active]:font-bold [&.active]:text-foreground"
-            >
+              className="[&.active]:font-bold [&.active]:text-foreground">
               Home
             </Link>
             <Link to="/goals" className="[&.active]:font-bold [&.active]:text-foreground">

@@ -37,8 +37,7 @@ export const TaskCardStopBtn = ({ task, entryReferenceXid }: Props) => {
       aria-label="Stop"
       title="Stop"
       disabled={isPending}
-      onClick={handleStop}
-    >
+      onClick={handleStop}>
       Stop
     </Button>
   );

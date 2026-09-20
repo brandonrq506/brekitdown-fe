@@ -16,8 +16,7 @@ export const GoalsGrid = ({ goals }: GoalsGridProps) => {
           <CardContent className="items-center text-center">
             <div
               aria-hidden="true"
-              className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary"
-            >
+              className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <TargetIcon className="size-6" />
             </div>
             <div className="space-y-1">

@@ -84,15 +84,13 @@ const RoleField = ({ control }: RoleFieldProps) => {
         name={field.name}
         value={field.value ?? undefined}
         onValueChange={(value) => field.onChange(value ?? null)}
-        disabled={field.disabled}
-      >
+        disabled={field.disabled}>
         <SelectTrigger
           id={field.name}
           ref={field.ref}
           onBlur={field.onBlur}
           aria-invalid={fieldState.invalid}
-          aria-describedby={fieldState.error ? errorId : undefined}
-        >
+          aria-describedby={fieldState.error ? errorId : undefined}>
           <SelectValue placeholder="Select a role" />
         </SelectTrigger>
         <SelectContent>{/* Options */}</SelectContent>
@@ -277,14 +275,12 @@ export const RoleField = ({ control }: RoleFieldProps) => {
         name={field.name}
         value={field.value}
         onChange={field.onChange}
-        disabled={field.disabled}
-      >
+        disabled={field.disabled}>
         <ListboxButton
           ref={field.ref}
           onBlur={field.onBlur}
           aria-invalid={fieldState.invalid}
-          aria-describedby={fieldState.error ? errorId : undefined}
-        >
+          aria-describedby={fieldState.error ? errorId : undefined}>
           {selectedRole?.label ?? "Select a role"}
         </ListboxButton>
         <ListboxOptions anchor="bottom">

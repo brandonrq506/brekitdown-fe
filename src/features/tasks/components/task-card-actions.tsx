@@ -73,8 +73,7 @@ export const TaskCardActions = ({ task }: Props) => {
                 aria-label={actionsLabel}
                 title={actionsLabel}
               />
-            }
-          >
+            }>
             <EllipsisIcon />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -82,8 +81,7 @@ export const TaskCardActions = ({ task }: Props) => {
               variant="destructive"
               disabled={isPending}
               closeOnClick
-              onClick={handleDelete}
-            >
+              onClick={handleDelete}>
               <Trash2Icon />
               Delete task
             </DropdownMenuItem>

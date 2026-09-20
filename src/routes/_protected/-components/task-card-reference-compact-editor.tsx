@@ -52,8 +52,7 @@ export const CompactEditor = ({
       ref={editorRef}
       className="relative"
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+      onMouseLeave={() => setIsHovered(false)}>
       <Button
         type="button"
         variant="ghost"
@@ -61,8 +60,7 @@ export const CompactEditor = ({
         className="h-8 px-2 text-xs font-normal text-muted-foreground"
         aria-expanded={isOpen}
         aria-haspopup="dialog"
-        onClick={() => setIsOpen((open) => !open)}
-      >
+        onClick={() => setIsOpen((open) => !open)}>
         <Icon aria-hidden="true" className="size-3.5" />
         {summary}
       </Button>
@@ -71,15 +69,13 @@ export const CompactEditor = ({
         <div
           role="dialog"
           aria-label={`Manage ${label.toLowerCase()}`}
-          className="absolute top-full left-0 z-30 mt-2 w-68 rounded-lg bg-popover p-3 text-popover-foreground shadow-lg ring-1 ring-foreground/10"
-        >
+          className="absolute top-full left-0 z-30 mt-2 w-68 rounded-lg bg-popover p-3 text-popover-foreground shadow-lg ring-1 ring-foreground/10">
           <p className="mb-2 text-xs font-medium">{label}</p>
           <div className="space-y-1.5">
             {items.map((item, index) => (
               <div
                 key={item}
-                className="flex min-h-8 items-center gap-2 rounded-md bg-muted px-2 text-xs"
-              >
+                className="flex min-h-8 items-center gap-2 rounded-md bg-muted px-2 text-xs">
                 <span
                   aria-hidden="true"
                   className={
@@ -94,8 +90,7 @@ export const CompactEditor = ({
                   variant="ghost"
                   size="icon-xs"
                   aria-label={`Remove ${item}`}
-                  onClick={() => setItems(items.filter((value) => value !== item))}
-                >
+                  onClick={() => setItems(items.filter((value) => value !== item))}>
                   <XIcon aria-hidden="true" />
                 </Button>
               </div>
@@ -112,8 +107,7 @@ export const CompactEditor = ({
               if (!value || items.includes(value)) return;
               setItems([...items, value]);
               setInput("");
-            }}
-          >
+            }}>
             <Input
               value={input}
               aria-label={`Add ${label.toLowerCase()}`}

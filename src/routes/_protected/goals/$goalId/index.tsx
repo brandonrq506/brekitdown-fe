@@ -62,8 +62,7 @@ function RouteComponent() {
       </header>
       <section
         aria-label="Tasks"
-        className="flex flex-col gap-5 rounded-2xl bg-muted/30 p-4 sm:p-6"
-      >
+        className="flex flex-col gap-5 rounded-2xl bg-muted/30 p-4 sm:p-6">
         {tasks.map((task) => (
           <TaskCard key={task.reference_xid} task={task} />
         ))}

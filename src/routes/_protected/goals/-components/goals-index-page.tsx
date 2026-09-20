@@ -43,8 +43,7 @@ export function GoalsIndexPage() {
           className="self-center"
           variant="outline"
           disabled={isFetchingNextPage}
-          onClick={() => void fetchNextPage()}
-        >
+          onClick={() => void fetchNextPage()}>
           {getLoadMoreLabel(isFetchingNextPage, isFetchNextPageError)}
         </Button>
       )}

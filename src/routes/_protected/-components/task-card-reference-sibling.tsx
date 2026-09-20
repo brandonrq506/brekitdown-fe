@@ -13,8 +13,7 @@ export const SiblingTaskCardReference = ({ onAddChild }: { onAddChild: () => voi
     <Card
       role="article"
       aria-labelledby={titleId}
-      className="overflow-visible px-5 py-5 ring-0 sm:ml-12 sm:w-[calc(100%-3rem)] sm:px-6"
-    >
+      className="overflow-visible px-5 py-5 ring-0 sm:ml-12 sm:w-[calc(100%-3rem)] sm:px-6">
       <CardHeader className="grid grid-cols-[1.5rem_minmax(0,1fr)] items-start gap-x-3 gap-y-3 px-0 sm:grid-cols-[1.5rem_minmax(0,1fr)_auto]">
         <StatusControl status={status} setStatus={setStatus} />
         <div className="min-w-0">

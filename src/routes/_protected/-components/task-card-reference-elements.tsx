@@ -40,8 +40,7 @@ export const ReferenceTaskActions = ({
       type="button"
       className="min-w-20 rounded-lg"
       aria-label={primaryLabel.startsWith("Stop") ? "Stop" : "Start"}
-      onClick={onPrimary}
-    >
+      onClick={onPrimary}>
       {primaryLabel}
     </Button>
     <Button
@@ -50,8 +49,7 @@ export const ReferenceTaskActions = ({
       size="icon"
       aria-label="Add child task"
       title="Add child task"
-      onClick={onAddChild}
-    >
+      onClick={onAddChild}>
       <PlusIcon aria-hidden="true" />
     </Button>
     <Button
@@ -59,8 +57,7 @@ export const ReferenceTaskActions = ({
       variant="outline"
       size="icon"
       aria-label="More task actions"
-      title="More task actions"
-    >
+      title="More task actions">
       <MoreHorizontalIcon aria-hidden="true" />
     </Button>
   </div>
@@ -90,8 +87,7 @@ export const StatusControl = ({
       <DropdownMenuContent className="w-44">
         <DropdownMenuRadioGroup
           value={status}
-          onValueChange={(value) => setStatus(value as TASK_STATUS)}
-        >
+          onValueChange={(value) => setStatus(value as TASK_STATUS)}>
           {Object.entries(TASK_STATUS_PRESENTATION).map(([value, presentation]) => {
             const StatusIcon = presentation.icon;
 

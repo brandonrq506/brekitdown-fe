@@ -36,8 +36,7 @@ export const TaskCardStartBtn = ({ task }: Props) => {
       aria-label="Start"
       title="Start"
       disabled={isPending}
-      onClick={handleStart}
-    >
+      onClick={handleStart}>
       Start
     </Button>
   );

@@ -36,8 +36,7 @@ export const GoalStarButton = ({ goal }: GoalStarButtonProps) => {
       className={cn(
         "text-muted-foreground hover:text-amber-600",
         isStarred && "text-amber-500 hover:text-amber-600",
-      )}
-    >
+      )}>
       <StarIcon className={cn(isStarred && "fill-current")} />
     </Button>
   );

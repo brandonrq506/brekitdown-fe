@@ -18,18 +18,15 @@ export const GoalCard = ({ goal }: GoalCardProps) => {
     <Card
       role="article"
       aria-labelledby={titleId}
-      className="h-full transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-md"
-    >
+      className="h-full transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-md">
       <CardHeader>
         <Link
           to="/goals/$goalId"
           params={{ goalId: goal.reference_xid }}
-          className="grid gap-4 rounded-lg focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
-        >
+          className="grid gap-4 rounded-lg focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none">
           <div
             aria-hidden="true"
-            className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary"
-          >
+            className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <TargetIcon className="size-5" />
           </div>
           <div className="space-y-1.5">
