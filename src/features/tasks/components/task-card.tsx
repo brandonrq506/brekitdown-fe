@@ -1,11 +1,14 @@
 import { useId } from "react";
-import { CalendarIcon, MessageSquareIcon } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 
 import { TASK_STATUS_PRESENTATION } from "../constants/task-status-presentation";
 import type { Task } from "../types/task";
 import { TaskCardActions } from "./task-card-actions";
 import { TaskDate } from "./task-date";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
+import { TaskNotesList } from "@/features/task-notes/components/task-notes-list";
+import { TaskNotesTrigger } from "@/features/task-notes/components/task-notes-trigger";
 
 interface Props {
   task: Task;
@@ -44,28 +47,34 @@ export const TaskCard = ({ task }: Props) => {
         </CardContent>
       )}
       <CardFooter className="mt-auto px-0 sm:ml-8">
-        <dl className="flex w-full min-w-0 flex-wrap gap-x-6 gap-y-2 border-t pt-4 text-xs text-muted-foreground">
-          <div className="order-last flex flex-wrap gap-x-2 sm:ml-auto">
-            <dt>Created</dt>
-            <dd>
-              <TaskDate timestamp={task.inserted_at} />
-            </dd>
-          </div>
-          <div className="flex flex-wrap items-center gap-x-2">
-            <dt className="flex items-center" title="Due date">
-              <CalendarIcon aria-hidden="true" className="size-3.5" />
-              <span className="sr-only">Due</span>
-            </dt>
-            <dd>{task.due_at === null ? "No due date" : <TaskDate timestamp={task.due_at} />}</dd>
-          </div>
-          <div className="flex flex-wrap items-center gap-x-2">
-            <dt className="flex items-center" title="Notes">
-              <MessageSquareIcon aria-hidden="true" className="size-3.5" />
-              <span className="sr-only">Notes</span>
-            </dt>
-            <dd>{task.notes_count}</dd>
-          </div>
-        </dl>
+        {/* The card owns this root: the trigger belongs among the metadata below, while the panel
+            it opens belongs under the whole row. Base UI allows them at different depths. */}
+        <Collapsible className="w-full">
+          <dl className="flex w-full min-w-0 flex-wrap items-center gap-x-6 gap-y-2 border-t pt-4 text-xs text-muted-foreground">
+            <div className="order-last flex flex-wrap gap-x-2 sm:ml-auto">
+              <dt>Created</dt>
+              <dd>
+                <TaskDate timestamp={task.inserted_at} />
+              </dd>
+            </div>
+            <div className="flex flex-wrap items-center gap-x-2">
+              <dt className="flex items-center" title="Due date">
+                <CalendarIcon aria-hidden="true" className="size-3.5" />
+                <span className="sr-only">Due</span>
+              </dt>
+              <dd>{task.due_at === null ? "No due date" : <TaskDate timestamp={task.due_at} />}</dd>
+            </div>
+            <div>
+              <dt className="sr-only">Notes</dt>
+              <dd>
+                <TaskNotesTrigger task={task} />
+              </dd>
+            </div>
+          </dl>
+          <CollapsibleContent className="pt-1">
+            <TaskNotesList taskReferenceXid={task.reference_xid} />
+          </CollapsibleContent>
+        </Collapsible>
       </CardFooter>
     </Card>
   );
