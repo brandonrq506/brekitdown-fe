@@ -1,9 +1,9 @@
 import { useId } from "react";
 
-import { TASK_STATUS_PRESENTATION } from "../constants/task-status-presentation";
 import type { Task } from "../types/task";
 import { TaskCardActions } from "./task-card-actions";
 import { TaskCardDueDate } from "./task-card-due-date";
+import { TaskCardStatus } from "./task-card-status";
 import { TaskDate } from "./task-date";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
@@ -17,7 +17,6 @@ interface Props {
 export const TaskCard = ({ task }: Props) => {
   const titleId = useId();
   const hasDescription = Boolean(task.description.trim());
-  const { label, icon: StatusIcon } = TASK_STATUS_PRESENTATION[task.status];
 
   return (
     <Card
@@ -25,13 +24,7 @@ export const TaskCard = ({ task }: Props) => {
       aria-labelledby={titleId}
       className="min-h-40 w-full min-w-0 gap-5 p-5 sm:p-6">
       <CardHeader className="grid grid-cols-[1.5rem_minmax(0,1fr)] items-start gap-x-3 gap-y-3 px-0 sm:grid-cols-[1.5rem_minmax(0,1fr)_auto]">
-        <span
-          role="img"
-          aria-label={label}
-          title={label}
-          className="mt-0.5 shrink-0 text-muted-foreground">
-          <StatusIcon aria-hidden="true" className="size-5" />
-        </span>
+        <TaskCardStatus task={task} />
         <CardTitle className="min-w-0">
           <h2 id={titleId} className="wrap-break-word">
             {task.name}

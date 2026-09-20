@@ -46,5 +46,5 @@ export interface CreateTaskPayload {
 }
 
 export interface UpdateTaskPayload {
-  task: Partial<Pick<Task, "name" | "description" | "due_at">>;
+  task: Partial<Pick<Task, "name" | "description" | "due_at" | "status">>;
 }

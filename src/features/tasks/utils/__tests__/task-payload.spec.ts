@@ -1,5 +1,10 @@
+import { TASK_STATUS } from "../../types/task";
 import { endOfLocalDay } from "../task-due-date";
-import { toCreateTaskPayload, toUpdateTaskDueAtPayload } from "../task-payload";
+import {
+  toCreateTaskPayload,
+  toUpdateTaskDueAtPayload,
+  toUpdateTaskStatusPayload,
+} from "../task-payload";
 
 it("trims the submitted values into a root task for the current goal", () => {
   expect(
@@ -61,4 +66,10 @@ it("sends the resolved deadline as the only change", () => {
 
 it("clears the deadline when no day is chosen", () => {
   expect(toUpdateTaskDueAtPayload(null)).toEqual({ task: { due_at: null } });
+});
+
+it("sends the chosen status as the only change", () => {
+  expect(toUpdateTaskStatusPayload(TASK_STATUS.COMPLETED)).toEqual({
+    task: { status: "completed" },
+  });
 });
