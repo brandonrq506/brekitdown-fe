@@ -23,7 +23,7 @@ export const GoalCard = ({ goal }: GoalCardProps) => {
         <Link
           to="/goals/$goalId"
           params={{ goalId: goal.reference_xid }}
-          className="grid gap-4 rounded-lg focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none">
+          className="grid min-w-0 gap-4 rounded-lg focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none">
           <div
             aria-hidden="true"
             className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -31,11 +31,11 @@ export const GoalCard = ({ goal }: GoalCardProps) => {
           </div>
           <div className="space-y-1.5">
             <CardTitle>
-              <h2 id={titleId} className="text-balance wrap-break-word">
+              <h2 id={titleId} className="text-balance wrap-anywhere">
                 {goal.name}
               </h2>
             </CardTitle>
-            <CardDescription className={hasDescription ? "wrap-break-word" : "italic"}>
+            <CardDescription className={hasDescription ? "wrap-anywhere" : "italic"}>
               {hasDescription ? goal.description : "No description yet."}
             </CardDescription>
           </div>
