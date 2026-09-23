@@ -46,7 +46,7 @@ function RouteComponent() {
             </h1>
             {/* Won't be needed once we make description non-null */}
             {Boolean(data.data.description?.trim()) && (
-              <p className="text-sm wrap-break-word text-muted-foreground">
+              <p className="text-sm wrap-break-word whitespace-pre-wrap text-muted-foreground">
                 {data.data.description}
               </p>
             )}
