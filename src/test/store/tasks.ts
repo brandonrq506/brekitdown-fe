@@ -9,7 +9,7 @@ const taskDefaults = {
   description: "Explain the problem, approach, and outcome.",
   status: TASK_STATUS.IN_PROGRESS,
   due_at: "2026-09-28T12:00:00Z",
-  goal_reference_xid: goal.reference_xid,
+  goal: { reference_xid: goal.reference_xid, name: goal.name },
   notes_count: 5,
   parent_reference_xid: null,
   time_entries: [],

@@ -13,7 +13,7 @@ import { render, screen, waitFor, within } from "@/test/test-utils";
 type User = ReturnType<typeof userEvent.setup>;
 
 const TaskListProbe = () => {
-  const { data } = useQuery(goalDetailsPageTasksQueryOptions(task.goal_reference_xid));
+  const { data } = useQuery(goalDetailsPageTasksQueryOptions(task.goal?.reference_xid ?? null));
 
   if (data === undefined) return null;
 

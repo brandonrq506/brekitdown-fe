@@ -1,3 +1,4 @@
+import type { Goal } from "@/features/goals/types/goal";
 import type { TimeEntry } from "@/features/time-entries/types/time-entry";
 import type { ApiResource, ObjectValues } from "@/types/core/helpers";
 import type { CursorPaginatedResponse } from "@/types/pagination";
@@ -16,12 +17,14 @@ export interface TaskTag extends ApiResource {
   name: string;
 }
 
+export type TaskGoal = Pick<Goal, "reference_xid" | "name">;
+
 export interface Task extends ApiResource {
   name: string;
   description: string;
   status: TASK_STATUS;
   due_at: string | null;
-  goal_reference_xid: string | null;
+  goal: TaskGoal | null;
   notes_count: number;
   parent_reference_xid: string | null;
   tags: TaskTag[];
