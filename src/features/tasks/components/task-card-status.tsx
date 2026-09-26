@@ -5,7 +5,6 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { goalDetailsPageTasksQueryOptions } from "../api/queries";
 import { useUpdateTaskMutation } from "../api/tanstack/use-update-task";
 import { TASK_STATUS_PRESENTATION } from "../constants/task-status-presentation";
 import type { Task, TASK_STATUS } from "../types/task";
@@ -28,16 +27,7 @@ export const TaskCardStatus = ({ task }: Props) => {
 
     if (status === task.status) return;
 
-    mutate(
-      { referenceXid: task.reference_xid, payload: toUpdateTaskStatusPayload(status) },
-      {
-        async onSuccess(_, __, ___, context) {
-          await context.client.invalidateQueries(
-            goalDetailsPageTasksQueryOptions(task.goal_reference_xid),
-          );
-        },
-      },
-    );
+    mutate({ referenceXid: task.reference_xid, payload: toUpdateTaskStatusPayload(status) });
   };
 
   return (

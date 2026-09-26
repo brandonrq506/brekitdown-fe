@@ -8,7 +8,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { goalDetailsPageTasksQueryOptions } from "@/features/tasks/api/queries";
 import { useDeleteTaskMutation } from "@/features/tasks/api/tanstack/delete-task-mutation";
 import { TaskCardStartBtn } from "@/routes/_protected/goals/-components/task-card-start-btn";
 import { TaskCardStopBtn } from "@/routes/_protected/goals/-components/task-card-stop-btn";
@@ -46,13 +45,7 @@ export const TaskCardActions = ({ task }: Props) => {
   const actionsLabel = `Task actions for ${task.name}`;
 
   const handleDelete = () => {
-    mutate(task.reference_xid, {
-      async onSuccess(_, __, ___, context) {
-        await context.client.invalidateQueries(
-          goalDetailsPageTasksQueryOptions(task.goal_reference_xid),
-        );
-      },
-    });
+    mutate(task.reference_xid);
   };
 
   return (

@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import { CreateDialog } from "@/components/form/create-dialog";
-import { goalDetailsPageTasksQueryOptions } from "../api/queries";
 import { useCreateTaskMutation } from "../api/tanstack/use-create-task";
 import { toCreateTaskPayload } from "../utils/task-payload";
 import { CreateTaskForm } from "./create-task-form";
@@ -25,13 +24,7 @@ export const CreateTaskDialog = ({ goalReferenceXid }: Props) => {
       description="Give your task a title, an optional description, and a due date.">
       <CreateTaskForm
         onSubmit={async (values) => {
-          await createTask.mutateAsync(toCreateTaskPayload(values, goalReferenceXid), {
-            async onSuccess(_, __, ___, context) {
-              await context.client.invalidateQueries(
-                goalDetailsPageTasksQueryOptions(goalReferenceXid),
-              );
-            },
-          });
+          await createTask.mutateAsync(toCreateTaskPayload(values, goalReferenceXid));
           setOpen(false);
         }}
         onCancel={() => setOpen(false)}
