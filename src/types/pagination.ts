@@ -22,3 +22,18 @@ export interface PaginatedResponse<T> {
   data: T[];
   meta: PaginationMeta;
 }
+
+/** `null` means "from the beginning"; a string is the previous page's `end_cursor`. */
+export type CursorPageParam = string | null;
+
+export interface CursorPaginationMeta {
+  page_size: number;
+  has_next_page: boolean;
+  /** `null` on an empty page. */
+  end_cursor: string | null;
+}
+
+export interface CursorPaginatedResponse<T> {
+  data: T[];
+  meta: CursorPaginationMeta;
+}

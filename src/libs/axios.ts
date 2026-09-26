@@ -49,3 +49,4 @@ export const api = axios.create({
 export const GOALS_ENDPOINT = "/goals";
 export const TASKS_ENDPOINT = "/tasks";
 export const TIME_ENTRIES_ENDPOINT = "/time_entries";
+export const RECOMMENDATIONS_ENDPOINT = "/recommendations";
