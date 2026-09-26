@@ -1,5 +1,6 @@
 import type { TimeEntry } from "@/features/time-entries/types/time-entry";
 import type { ApiResource, ObjectValues } from "@/types/core/helpers";
+import type { CursorPaginatedResponse } from "@/types/pagination";
 
 export const TASK_STATUS = {
   SCHEDULED: "scheduled",
@@ -35,6 +36,8 @@ export interface TasksResponse {
 export interface TaskResponse {
   data: Task;
 }
+
+export type RecommendedTasksResponse = CursorPaginatedResponse<Task>;
 
 export interface TaskFormValues extends Pick<Task, "name" | "description"> {
   dueAt: Date | null;

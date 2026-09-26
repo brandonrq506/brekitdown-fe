@@ -1,4 +1,10 @@
-import { api, GOALS_ENDPOINT, TASKS_ENDPOINT, TIME_ENTRIES_ENDPOINT } from "@/libs/axios";
+import {
+  api,
+  GOALS_ENDPOINT,
+  RECOMMENDATIONS_ENDPOINT,
+  TASKS_ENDPOINT,
+  TIME_ENTRIES_ENDPOINT,
+} from "@/libs/axios";
 
 const apiUrl = (endpoint: string) => `${api.defaults.baseURL}${endpoint}`;
 
@@ -13,4 +19,5 @@ export const apiRoutes = {
     apiUrl(`${TASKS_ENDPOINT}/${taskReferenceXid}${TIME_ENTRIES_ENDPOINT}`),
   timeEntry: (taskReferenceXid = ":taskReferenceXid", entryReferenceXid = ":entryReferenceXid") =>
     apiUrl(`${TASKS_ENDPOINT}/${taskReferenceXid}${TIME_ENTRIES_ENDPOINT}/${entryReferenceXid}`),
+  recommendations: apiUrl(RECOMMENDATIONS_ENDPOINT),
 };
