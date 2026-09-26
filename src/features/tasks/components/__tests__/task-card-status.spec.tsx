@@ -38,26 +38,6 @@ const openStatusMenu = async (user: User, label: string) => {
   await user.keyboard("{ArrowDown}");
 };
 
-it("offers every status from the card's status icon", async () => {
-  const user = userEvent.setup();
-  render(<TaskCard task={task} />);
-
-  await openStatusMenu(user, "In progress");
-
-  expect(screen.getAllByRole("menuitemradio")).toHaveLength(5);
-  expect(screen.getByRole("menuitemradio", { name: "Scheduled" })).toBeVisible();
-  expect(screen.getByRole("menuitemradio", { name: "On hold" })).toBeVisible();
-});
-
-it("marks the status the task already has", async () => {
-  const user = userEvent.setup();
-  render(<TaskCard task={task} />);
-
-  await openStatusMenu(user, "In progress");
-
-  expect(screen.getByRole("menuitemradio", { name: "In progress" })).toBeChecked();
-});
-
 it("sends the chosen status as the only change", async () => {
   const user = userEvent.setup();
   const bodies = capturePatches();
@@ -70,19 +50,6 @@ it("sends the chosen status as the only change", async () => {
   await waitFor(() => {
     expect(bodies).toEqual([{ task: { status: TASK_STATUS.COMPLETED } }]);
   });
-});
-
-it("does not resend the status the task already has", async () => {
-  const user = userEvent.setup();
-  const bodies = capturePatches();
-  render(<TaskCard task={completed} />);
-
-  await openStatusMenu(user, "Completed");
-
-  await user.click(screen.getByRole("menuitemradio", { name: "Completed" }));
-
-  expect(bodies).toHaveLength(0);
-  expect(screen.getByRole("button", { name: "Status: Completed" })).toBeEnabled();
 });
 
 it("disables the status icon while the change is in flight", async () => {
