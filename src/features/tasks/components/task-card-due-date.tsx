@@ -1,7 +1,6 @@
 import { CalendarIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { goalDetailsPageTasksQueryOptions } from "../api/queries";
 import { useUpdateTaskMutation } from "../api/tanstack/use-update-task";
 import type { Task } from "../types/task";
 import { toUpdateTaskDueAtPayload } from "../utils/task-payload";
@@ -21,16 +20,7 @@ export const TaskCardDueDate = ({ task }: Props) => {
   const label = dueAt === null ? "Set due date" : "Change due date";
 
   const handleChange = (nextDueAt: Date | null) => {
-    mutate(
-      { referenceXid: task.reference_xid, payload: toUpdateTaskDueAtPayload(nextDueAt) },
-      {
-        async onSuccess(_, __, ___, context) {
-          await context.client.invalidateQueries(
-            goalDetailsPageTasksQueryOptions(task.goal_reference_xid),
-          );
-        },
-      },
-    );
+    mutate({ referenceXid: task.reference_xid, payload: toUpdateTaskDueAtPayload(nextDueAt) });
   };
 
   return (
