@@ -1,17 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { TaskCardReference } from "./-components/task-card-reference";
+
+import { RecommendationsPage } from "./-components/recommendations-page";
+import { recommendationsPageQueryOptions } from "@/features/tasks/api/queries";
 
 export const Route = createFileRoute("/_protected/")({
-  component: RouteComponent,
+  loader: async ({ context: { queryClient } }) => {
+    await queryClient.infiniteQuery({ ...recommendationsPageQueryOptions(), staleTime: "static" });
+  },
+  component: RecommendationsPage,
   head: () => ({
     meta: [
       {
-        title: "Home Page | Brekitdown",
+        title: "Up next | Brekitdown",
       },
     ],
   }),
 });
-
-function RouteComponent() {
-  return <TaskCardReference />;
-}

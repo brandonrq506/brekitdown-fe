@@ -10,6 +10,18 @@ import { server } from "@/test/server";
 import { task } from "@/test/store/tasks";
 import { render, screen, waitFor, within } from "@/test/test-utils";
 
+// Typed off Root rather than importing `Task`: this spec sits at the import cap.
+const MenuCard = ({ task }: Pick<Parameters<typeof TaskCard.Root>[0], "task">) => (
+  <TaskCard.Root task={task}>
+    <TaskCard.Header>
+      <TaskCard.Title />
+      <TaskCard.Actions>
+        <TaskCard.Menu />
+      </TaskCard.Actions>
+    </TaskCard.Header>
+  </TaskCard.Root>
+);
+
 type User = ReturnType<typeof userEvent.setup>;
 
 const TaskListProbe = () => {
@@ -20,7 +32,7 @@ const TaskListProbe = () => {
   return (
     <>
       {data.data.map((listedTask) => (
-        <TaskCard key={listedTask.reference_xid} task={listedTask} />
+        <MenuCard key={listedTask.reference_xid} task={listedTask} />
       ))}
       {data.data.length === 0 && <p>No tasks for this goal yet.</p>}
     </>
@@ -49,7 +61,7 @@ it("disables the task actions while the deletion is in flight", async () => {
       return new HttpResponse(null, { status: 204 });
     }),
   );
-  render(<TaskCard task={task} />);
+  render(<MenuCard task={task} />);
 
   await openTaskActions(user, task);
 

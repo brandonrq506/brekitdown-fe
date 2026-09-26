@@ -64,7 +64,22 @@ function RouteComponent() {
         aria-label="Tasks"
         className="flex flex-col gap-5 rounded-2xl bg-muted/30 p-4 sm:p-6">
         {tasks.map((task) => (
-          <TaskCard key={task.reference_xid} task={task} />
+          <TaskCard.Root key={task.reference_xid} task={task}>
+            <TaskCard.Header>
+              <TaskCard.Status />
+              <TaskCard.Title />
+              <TaskCard.Actions>
+                <TaskCard.Timer />
+                <TaskCard.Menu />
+              </TaskCard.Actions>
+            </TaskCard.Header>
+            <TaskCard.Description />
+            <TaskCard.Footer>
+              <TaskCard.Created />
+              <TaskCard.DueDate />
+              <TaskCard.Notes />
+            </TaskCard.Footer>
+          </TaskCard.Root>
         ))}
         {tasks.length === 0 && (
           <p className="text-sm text-muted-foreground">No tasks for this goal yet.</p>
