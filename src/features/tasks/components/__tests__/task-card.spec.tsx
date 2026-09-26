@@ -1,7 +1,27 @@
 import { TaskCard } from "../task-card";
-import { TASK_STATUS, type TASK_STATUS as TaskStatus } from "../../types/task";
+import { TASK_STATUS, type Task, type TASK_STATUS as TaskStatus } from "../../types/task";
 import { buildTask, task } from "@/test/store/tasks";
 import { render, screen } from "@/test/test-utils";
+
+/** The goal page's composition: this spec covers the card as a whole. */
+const GoalPageCard = ({ task }: { task: Task }) => (
+  <TaskCard.Root task={task}>
+    <TaskCard.Header>
+      <TaskCard.Status />
+      <TaskCard.Title />
+      <TaskCard.Actions>
+        <TaskCard.Timer />
+        <TaskCard.Menu />
+      </TaskCard.Actions>
+    </TaskCard.Header>
+    <TaskCard.Description />
+    <TaskCard.Footer>
+      <TaskCard.Created />
+      <TaskCard.DueDate />
+      <TaskCard.Notes />
+    </TaskCard.Footer>
+  </TaskCard.Root>
+);
 
 const statusIcons: [label: string, status: TaskStatus][] = [
   ["Scheduled", TASK_STATUS.SCHEDULED],
@@ -23,27 +43,27 @@ afterEach(() => {
 });
 
 it("shows the task's name as the card's heading", () => {
-  render(<TaskCard task={task} />);
+  render(<GoalPageCard task={task} />);
 
   expect(screen.getByRole("article", { name: task.name })).toBeVisible();
   expect(screen.getByRole("heading", { name: task.name, level: 2 })).toBeVisible();
 });
 
 it("shows the task's description", () => {
-  render(<TaskCard task={task} />);
+  render(<GoalPageCard task={task} />);
 
   expect(screen.getByText(task.description)).toBeVisible();
 });
 
 it.each(statusIcons)("shows the %s status icon", (label, status) => {
-  render(<TaskCard task={buildTask({ status })} />);
+  render(<GoalPageCard task={buildTask({ status })} />);
 
   expect(screen.getByRole("button", { name: `Status: ${label}` })).toBeVisible();
 });
 
 it("shows how long ago the task was created", () => {
   pinToday("2026-09-13T12:00:00Z");
-  render(<TaskCard task={task} />);
+  render(<GoalPageCard task={task} />);
 
   expect(screen.getByRole("article", { name: task.name })).toHaveTextContent(
     /Created\s*last month/,
@@ -52,19 +72,19 @@ it("shows how long ago the task was created", () => {
 
 it("shows the day the task is due", () => {
   pinToday("2026-09-13T12:00:00Z");
-  render(<TaskCard task={task} />);
+  render(<GoalPageCard task={task} />);
 
   expect(screen.getByRole("article", { name: task.name })).toHaveTextContent(/Due\s*Sep 28/);
 });
 
 it("shows how many notes the task has", () => {
-  render(<TaskCard task={task} />);
+  render(<GoalPageCard task={task} />);
 
   expect(screen.getByRole("article", { name: task.name })).toHaveTextContent(/Notes\s*5/);
 });
 
 it("tells the user the task has no due date when none is set", () => {
-  render(<TaskCard task={buildTask({ due_at: null })} />);
+  render(<GoalPageCard task={buildTask({ due_at: null })} />);
 
   expect(screen.getByText("No due date")).toBeVisible();
 });

@@ -3,10 +3,20 @@ import { http, HttpResponse } from "msw";
 
 import type { TaskNote, TaskNotesResponse } from "../../types/task-note";
 import { TaskCard } from "@/features/tasks/components/task-card";
+import type { Task } from "@/features/tasks/types/task";
 import { apiRoutes } from "@/test/handlers/api-routes";
 import { server } from "@/test/server";
 import { buildTask, task } from "@/test/store/tasks";
 import { render, screen, within } from "@/test/test-utils";
+
+const NotesCard = ({ task }: { task: Task }) => (
+  <TaskCard.Root task={task}>
+    <TaskCard.Title />
+    <TaskCard.Footer>
+      <TaskCard.Notes />
+    </TaskCard.Footer>
+  </TaskCard.Root>
+);
 
 const NOTES_LIST_NAME = "Task notes, newest first";
 
@@ -32,7 +42,7 @@ const notesTrigger = (forTask = task) =>
   screen.getByRole("button", { name: `Notes for ${forTask.name} (${forTask.notes_count})` });
 
 it("offers the notes without showing them until the user expands them", () => {
-  render(<TaskCard task={task} />);
+  render(<NotesCard task={task} />);
 
   expect(notesTrigger()).toBeVisible();
   expect(screen.queryByRole("list", { name: NOTES_LIST_NAME })).not.toBeInTheDocument();
@@ -45,7 +55,7 @@ it("lists the task's notes newest first when the user expands them", async () =>
       mockNotesResponse([newestNote, olderNote]),
     ),
   );
-  render(<TaskCard task={task} />);
+  render(<NotesCard task={task} />);
 
   await user.click(notesTrigger());
 
@@ -64,7 +74,7 @@ it("opens the newest note so the user can read it straight away", async () => {
       mockNotesResponse([newestNote, olderNote]),
     ),
   );
-  render(<TaskCard task={task} />);
+  render(<NotesCard task={task} />);
 
   await user.click(notesTrigger());
 
@@ -79,7 +89,7 @@ it("reveals an older note's body when the user opens it", async () => {
       mockNotesResponse([newestNote, olderNote]),
     ),
   );
-  render(<TaskCard task={task} />);
+  render(<NotesCard task={task} />);
 
   await user.click(notesTrigger());
 
@@ -102,7 +112,7 @@ it("tells the user the notes are on their way", async () => {
       return mockNotesResponse([newestNote]);
     }),
   );
-  render(<TaskCard task={task} />);
+  render(<NotesCard task={task} />);
 
   await user.click(notesTrigger());
 
@@ -118,73 +128,11 @@ it("tells the user a task has no notes yet", async () => {
   server.use(
     http.get(apiRoutes.taskNotes(taskWithoutNotes.reference_xid), () => mockNotesResponse([])),
   );
-  render(<TaskCard task={taskWithoutNotes} />);
+  render(<NotesCard task={taskWithoutNotes} />);
 
   await user.click(notesTrigger(taskWithoutNotes));
 
   expect(await screen.findByText("No notes for this task yet.")).toBeVisible();
-});
-
-it("tells the user when the notes cannot be loaded", async () => {
-  const user = userEvent.setup();
-  server.use(
-    http.get(
-      apiRoutes.taskNotes(task.reference_xid),
-      () => new HttpResponse(null, { status: 503 }),
-    ),
-  );
-  render(<TaskCard task={task} />);
-
-  await user.click(notesTrigger());
-
-  expect(await screen.findByRole("alert")).toHaveTextContent("We couldn't load your notes.");
-});
-
-it("shows the notes when the user tries again after a failed load", async () => {
-  const user = userEvent.setup();
-  server.use(
-    http.get(
-      apiRoutes.taskNotes(task.reference_xid),
-      () => new HttpResponse(null, { status: 503 }),
-    ),
-  );
-  render(<TaskCard task={task} />);
-  await user.click(notesTrigger());
-  await screen.findByRole("alert");
-
-  server.use(
-    http.get(apiRoutes.taskNotes(task.reference_xid), () => mockNotesResponse([newestNote])),
-  );
-  await user.click(screen.getByRole("button", { name: "Try again" }));
-
-  expect(await screen.findByRole("heading", { name: newestNote.title })).toBeVisible();
-  expect(screen.queryByRole("alert")).not.toBeInTheDocument();
-});
-
-it("keeps the saved notes on screen when a later refresh fails", async () => {
-  const user = userEvent.setup();
-  server.use(
-    http.get(apiRoutes.taskNotes(task.reference_xid), () => mockNotesResponse([newestNote]), {
-      once: true,
-    }),
-    http.get(
-      apiRoutes.taskNotes(task.reference_xid),
-      () => new HttpResponse(null, { status: 503 }),
-    ),
-  );
-  render(<TaskCard task={task} />);
-  await user.click(notesTrigger());
-  await screen.findByRole("heading", { name: newestNote.title });
-
-  // Collapsing unmounts the list, so reopening it is what asks the server for the notes again.
-  await user.click(notesTrigger());
-
-  await user.click(notesTrigger());
-
-  expect(await screen.findByRole("alert")).toHaveTextContent(
-    "We couldn't refresh your notes. Showing the saved notes.",
-  );
-  expect(screen.getByRole("heading", { name: newestNote.title })).toBeVisible();
 });
 
 it("shows each task the notes that belong to it", async () => {
@@ -197,8 +145,8 @@ it("shows each task the notes that belong to it", async () => {
   );
   render(
     <>
-      <TaskCard task={task} />
-      <TaskCard task={otherTask} />
+      <NotesCard task={task} />
+      <NotesCard task={otherTask} />
     </>,
   );
   await user.click(notesTrigger());

@@ -2,13 +2,21 @@ import userEvent from "@testing-library/user-event";
 import { http } from "msw";
 
 import { TaskCard } from "../task-card";
-import type { UpdateTaskPayload } from "../../types/task";
+import type { Task, UpdateTaskPayload } from "../../types/task";
 import { endOfLocalDay } from "../../utils/task-due-date";
 import { apiRoutes } from "@/test/handlers/api-routes";
 import { mockTaskResponse } from "@/test/handlers/tasks";
 import { server } from "@/test/server";
 import { buildTask, task } from "@/test/store/tasks";
 import { render, screen, waitFor } from "@/test/test-utils";
+
+const DueDateCard = ({ task }: { task: Task }) => (
+  <TaskCard.Root task={task}>
+    <TaskCard.Footer>
+      <TaskCard.DueDate />
+    </TaskCard.Footer>
+  </TaskCard.Root>
+);
 
 const tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
@@ -48,7 +56,7 @@ const capturePatches = () => {
 
 it("opens a calendar from the card's due date", async () => {
   const user = userEvent.setup();
-  render(<TaskCard task={dueTomorrow} />);
+  render(<DueDateCard task={dueTomorrow} />);
 
   await user.click(screen.getByRole("button", { name: "Change due date" }));
 
@@ -56,7 +64,7 @@ it("opens a calendar from the card's due date", async () => {
 });
 
 it("offers to set a due date when the task has none", () => {
-  render(<TaskCard task={undated} />);
+  render(<DueDateCard task={undated} />);
 
   expect(screen.getByRole("button", { name: "Set due date" })).toBeVisible();
   expect(screen.getByText("No due date")).toBeVisible();
@@ -65,7 +73,7 @@ it("offers to set a due date when the task has none", () => {
 it("saves the chosen day as the end of that day in the browser's timezone", async () => {
   const user = userEvent.setup();
   const bodies = capturePatches();
-  render(<TaskCard task={undated} />);
+  render(<DueDateCard task={undated} />);
 
   await user.click(screen.getByRole("button", { name: "Set due date" }));
 
@@ -79,7 +87,7 @@ it("saves the chosen day as the end of that day in the browser's timezone", asyn
 it("clears the due date", async () => {
   const user = userEvent.setup();
   const bodies = capturePatches();
-  render(<TaskCard task={dueTomorrow} />);
+  render(<DueDateCard task={dueTomorrow} />);
 
   await user.click(screen.getByRole("button", { name: "Change due date" }));
 
@@ -94,7 +102,7 @@ it("clears the due date", async () => {
 it("does not resend the day the task is already due", async () => {
   const user = userEvent.setup();
   const bodies = capturePatches();
-  render(<TaskCard task={dueTomorrow} />);
+  render(<DueDateCard task={dueTomorrow} />);
 
   await user.click(screen.getByRole("button", { name: "Change due date" }));
 
@@ -117,7 +125,7 @@ it("disables the due date while the change is in flight", async () => {
       return mockTaskResponse(dueTomorrow);
     }),
   );
-  render(<TaskCard task={undated} />);
+  render(<DueDateCard task={undated} />);
 
   await user.click(screen.getByRole("button", { name: "Set due date" }));
 

@@ -1,13 +1,21 @@
 import userEvent from "@testing-library/user-event";
 import { http } from "msw";
 
-import { TASK_STATUS, type UpdateTaskPayload } from "../../types/task";
+import { TASK_STATUS, type Task, type UpdateTaskPayload } from "../../types/task";
 import { TaskCard } from "../task-card";
 import { apiRoutes } from "@/test/handlers/api-routes";
 import { mockTaskResponse } from "@/test/handlers/tasks";
 import { server } from "@/test/server";
 import { buildTask, task } from "@/test/store/tasks";
 import { render, screen, waitFor } from "@/test/test-utils";
+
+const StatusCard = ({ task }: { task: Task }) => (
+  <TaskCard.Root task={task}>
+    <TaskCard.Header>
+      <TaskCard.Status />
+    </TaskCard.Header>
+  </TaskCard.Root>
+);
 
 const completed = buildTask({ status: TASK_STATUS.COMPLETED });
 
@@ -41,7 +49,7 @@ const openStatusMenu = async (user: User, label: string) => {
 it("sends the chosen status as the only change", async () => {
   const user = userEvent.setup();
   const bodies = capturePatches();
-  render(<TaskCard task={task} />);
+  render(<StatusCard task={task} />);
 
   await openStatusMenu(user, "In progress");
 
@@ -65,7 +73,7 @@ it("disables the status icon while the change is in flight", async () => {
       return mockTaskResponse(completed);
     }),
   );
-  render(<TaskCard task={task} />);
+  render(<StatusCard task={task} />);
 
   await openStatusMenu(user, "In progress");
 
