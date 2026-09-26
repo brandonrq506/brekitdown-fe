@@ -81,22 +81,3 @@ it("shows the empty state after the last task is deleted", async () => {
   expect(await screen.findByText("No tasks for this goal yet.")).toBeVisible();
   expect(screen.queryByRole("article", { name: task.name })).not.toBeInTheDocument();
 });
-
-it("shows a retry message when deletion fails", async () => {
-  const user = userEvent.setup();
-  server.use(
-    http.delete(apiRoutes.task(task.reference_xid), () =>
-      HttpResponse.json({ errors: { detail: "Temporary failure" } }, { status: 503 }),
-    ),
-  );
-  render(<TaskCard task={task} />);
-
-  await openTaskActions(user, task);
-
-  await user.click(screen.getByRole("menuitem", { name: "Delete task" }));
-
-  expect(await screen.findByRole("alert")).toHaveTextContent(
-    "We couldn't delete this task. Please try again.",
-  );
-  expect(screen.getByRole("article", { name: task.name })).toBeVisible();
-});

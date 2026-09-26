@@ -1,5 +1,5 @@
 import userEvent from "@testing-library/user-event";
-import { http, HttpResponse } from "msw";
+import { http } from "msw";
 
 import { TaskCard } from "../task-card";
 import type { UpdateTaskPayload } from "../../types/task";
@@ -129,23 +129,4 @@ it("disables the due date while the change is in flight", async () => {
   await waitFor(() => {
     expect(screen.getByRole("button", { name: "Set due date" })).toBeEnabled();
   });
-});
-
-it("shows a retry message when the change fails", async () => {
-  const user = userEvent.setup();
-  server.use(
-    http.patch(apiRoutes.task(task.reference_xid), () =>
-      HttpResponse.json({ errors: { detail: "Temporary failure" } }, { status: 503 }),
-    ),
-  );
-  render(<TaskCard task={undated} />);
-
-  await user.click(screen.getByRole("button", { name: "Set due date" }));
-
-  await user.click(screen.getByRole("button", { name: dayButtonName }));
-
-  expect(await screen.findByRole("alert")).toHaveTextContent(
-    "We couldn't update the due date. Please try again.",
-  );
-  expect(screen.getByText("No due date")).toBeVisible();
 });

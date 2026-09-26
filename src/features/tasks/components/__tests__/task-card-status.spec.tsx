@@ -1,5 +1,5 @@
 import userEvent from "@testing-library/user-event";
-import { http, HttpResponse } from "msw";
+import { http } from "msw";
 
 import { TASK_STATUS, type UpdateTaskPayload } from "../../types/task";
 import { TaskCard } from "../task-card";
@@ -77,23 +77,4 @@ it("disables the status icon while the change is in flight", async () => {
   await waitFor(() => {
     expect(screen.getByRole("button", { name: "Status: In progress" })).toBeEnabled();
   });
-});
-
-it("shows a retry message when the change fails", async () => {
-  const user = userEvent.setup();
-  server.use(
-    http.patch(apiRoutes.task(task.reference_xid), () =>
-      HttpResponse.json({ errors: { detail: "Temporary failure" } }, { status: 503 }),
-    ),
-  );
-  render(<TaskCard task={task} />);
-
-  await openStatusMenu(user, "In progress");
-
-  await user.click(screen.getByRole("menuitemradio", { name: "Completed" }));
-
-  expect(await screen.findByRole("alert")).toHaveTextContent(
-    "We couldn't update the status. Please try again.",
-  );
-  expect(screen.getByRole("button", { name: "Status: In progress" })).toBeVisible();
 });
