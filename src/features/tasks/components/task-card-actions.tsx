@@ -9,8 +9,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useDeleteTaskMutation } from "@/features/tasks/api/tanstack/delete-task-mutation";
-import { TaskCardStartBtn } from "@/routes/_protected/goals/-components/task-card-start-btn";
-import { TaskCardStopBtn } from "@/routes/_protected/goals/-components/task-card-stop-btn";
+import { TaskCardStartBtn } from "@/features/time-entries/components/task-card-start-btn";
+import { TaskCardStopBtn } from "@/features/time-entries/components/task-card-stop-btn";
 
 const DELETE_ERROR_MESSAGE = "We couldn't delete this task. Please try again.";
 
