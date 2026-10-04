@@ -1,9 +1,10 @@
 import { DueDate } from "./due-date";
 import { Menu } from "./menu";
 import { Notes } from "./notes";
-import { Created, Description, Goal, Title } from "./parts";
+import { Created, Description, Goal, TimeSpent, Title } from "./parts";
 import { Actions, Footer, Header, Root } from "./root";
 import { Status } from "./status";
+import { StatusDetails } from "./status-details";
 import { Timer } from "./timer";
 
 export const TaskCard = {
@@ -18,6 +19,8 @@ export const TaskCard = {
   Footer,
   Created,
   DueDate,
+  TimeSpent,
+  StatusDetails,
   Goal,
   Notes,
 };

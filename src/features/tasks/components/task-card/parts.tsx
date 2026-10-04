@@ -1,7 +1,9 @@
 import { Link } from "@tanstack/react-router";
+import { ClockIcon } from "lucide-react";
 
 import { CardContent, CardTitle } from "@/components/ui/card";
 import { TaskDate } from "../task-date";
+import { formatTaskTimeSpent, getTaskTimeSpent } from "../../utils/task-time-spent";
 import { useTaskCard } from "./context";
 
 export const Title = () => {
@@ -37,6 +39,22 @@ export const Created = () => {
       <dt>Created</dt>
       <dd>
         <TaskDate timestamp={task.inserted_at} />
+      </dd>
+    </div>
+  );
+};
+
+export const TimeSpent = () => {
+  const { task } = useTaskCard();
+  const timeSpent = getTaskTimeSpent(task);
+  if (timeSpent.blank) return null;
+
+  return (
+    <div className="flex flex-wrap items-center gap-x-2">
+      <dt className="sr-only">Time spent</dt>
+      <dd className="flex items-center gap-x-2">
+        <ClockIcon aria-hidden="true" className="size-3.5" />
+        {formatTaskTimeSpent(timeSpent)}
       </dd>
     </div>
   );

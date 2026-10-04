@@ -41,7 +41,7 @@ export function RecommendationsPage() {
             </TaskCard.Header>
             <TaskCard.Footer>
               <TaskCard.Goal />
-              <TaskCard.DueDate />
+              <TaskCard.StatusDetails />
             </TaskCard.Footer>
           </TaskCard.Root>
         ))}
