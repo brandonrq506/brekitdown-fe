@@ -75,8 +75,7 @@ function RouteComponent() {
             </TaskCard.Header>
             <TaskCard.Description />
             <TaskCard.Footer>
-              <TaskCard.Created />
-              <TaskCard.DueDate />
+              <TaskCard.StatusDetails />
               <TaskCard.Notes />
             </TaskCard.Footer>
           </TaskCard.Root>

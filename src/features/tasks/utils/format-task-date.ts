@@ -1,3 +1,5 @@
+import { memoizeFormatter } from "./memoize-formatter";
+
 /** Every date here is normalised to ISO 8601, so the week and year lengths are fixed. */
 const DAYS_IN_ISO_WEEK = 7;
 const MONTHS_IN_ISO_YEAR = 12;
@@ -12,28 +14,6 @@ export interface TaskDateContext {
   /** BCP 47 tag. Defaults to the runtime locale. */
   locale?: string;
 }
-
-/**
- * Constructing an `Intl` formatter costs tens of times what using one does, which is why MDN's
- * guidance is to keep them. Locale and time zone are parameters here, so "keep one" becomes
- * "keep one per distinct set of construction arguments".
- */
-const memoizeFormatter = <TArguments extends readonly (string | undefined)[], TFormatter>(
-  create: (...formatterArguments: TArguments) => TFormatter,
-) => {
-  const cache = new Map<string, TFormatter>();
-  return (...formatterArguments: TArguments): TFormatter => {
-    // Serialised rather than joined, so an explicit "" locale cannot collide with `undefined`
-    // and make the result depend on which call happened to populate the cache first.
-    const key = JSON.stringify(formatterArguments);
-    const cached = cache.get(key);
-    if (cached !== undefined) return cached;
-
-    const formatter = create(...formatterArguments);
-    cache.set(key, formatter);
-    return formatter;
-  };
-};
 
 const relativeFormatter = memoizeFormatter(
   (locale?: string) => new Intl.RelativeTimeFormat(locale, { numeric: "auto" }),
