@@ -2,13 +2,10 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { createFileRoute } from "@tanstack/react-router";
 import { goalDetailsPageQueryOptions } from "@/features/goals/api/queries";
-import { GoalCompletedAt } from "@/features/goals/components/goal-completed-at";
-import { GoalMenu } from "@/features/goals/components/goal-menu";
-import { GoalStarButton } from "@/features/goals/components/goal-star-button";
 import { goalDetailsPageTasksQueryOptions } from "@/features/tasks/api/queries";
 import { TaskCard } from "@/features/tasks/components/task-card";
-import { CreateTaskDialog } from "@/features/tasks/components/create-task-dialog";
 import { orderGoalDetailsTasks } from "@/features/tasks/utils/order-goal-details-tasks";
+import { GoalDetailsHeader } from "./-components/goal-details-header";
 
 export const Route = createFileRoute("/_protected/goals/$goalId/")({
   component: RouteComponent,
@@ -40,32 +37,7 @@ function RouteComponent() {
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-10 sm:px-6">
-      <header className="space-y-4 border-b pb-6">
-        <div className="flex items-start justify-between gap-4">
-          <div className="space-y-2">
-            <h1 className="text-4xl font-medium tracking-tight wrap-break-word">
-              {data.data.name}
-            </h1>
-            {/* Won't be needed once we make description non-null */}
-            {Boolean(data.data.description?.trim()) && (
-              <p className="text-sm wrap-break-word whitespace-pre-wrap text-muted-foreground">
-                {data.data.description}
-              </p>
-            )}
-            <GoalCompletedAt completedAt={data.data.completed_at} />
-          </div>
-          <div className="flex items-center gap-2">
-            <GoalStarButton goal={data.data} />
-            <GoalMenu goal={data.data} tasks={tasksData.data} />
-          </div>
-        </div>
-        <div className="flex items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
-            {tasks.length} {tasks.length === 1 ? "task" : "tasks"}
-          </p>
-          <CreateTaskDialog key={goalId} goalReferenceXid={goalId} />
-        </div>
-      </header>
+      <GoalDetailsHeader goal={data.data} tasks={tasksData.data} />
       <section
         aria-label="Tasks"
         className="flex flex-col gap-5 rounded-2xl bg-muted/30 p-4 sm:p-6">
