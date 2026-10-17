@@ -1,21 +1,16 @@
 import userEvent from "@testing-library/user-event";
-import { HttpResponse, http } from "msw";
+import { http } from "msw";
 
 import { TASK_STATUS, type UpdateTaskPayload } from "../../types/task";
 import { TaskCard } from "../task-card";
 import { apiRoutes } from "@/test/handlers/api-routes";
+import { mockGoalCompletedConflict } from "@/test/handlers/goals";
 import { mockTaskResponse } from "@/test/handlers/tasks";
 import { server } from "@/test/server";
 import { buildTask } from "@/test/store/tasks";
 import { render, screen, waitFor } from "@/test/test-utils";
 
 const dropped = buildTask({ status: TASK_STATUS.DROPPED });
-
-const goalCompletedConflict = () =>
-  HttpResponse.json(
-    { errors: { code: "goal_completed", detail: "This goal is completed." } },
-    { status: 409 },
-  );
 
 afterEach(() => server.events.removeAllListeners());
 
@@ -35,7 +30,7 @@ const refuseFirstPatch = () => {
         patches.push(body);
 
         return patches.length === 1
-          ? goalCompletedConflict()
+          ? mockGoalCompletedConflict()
           : mockTaskResponse({ ...dropped, ...body.task });
       },
     ),

@@ -24,6 +24,13 @@ export const mockGoalResponse = (data: Goal, init?: HttpResponseInit) =>
 export const mockGoalsResponse = (data: Goal[], meta = onePageMeta(data.length)) =>
   HttpResponse.json<GoalsResponse>({ data, meta });
 
+/** The API's refusal to add or reopen a task in a Completed goal. */
+export const mockGoalCompletedConflict = () =>
+  HttpResponse.json(
+    { errors: { code: "goal_completed", detail: "This goal is completed." } },
+    { status: 409 },
+  );
+
 export const goalHandlers = [
   http.get(apiRoutes.goals, () => mockGoalsResponse(goals)),
   http.get(apiRoutes.goal(), () => mockGoalResponse(goal)),
