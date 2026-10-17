@@ -28,6 +28,23 @@ export const getApiValidationErrors = (error: unknown): ApiValidationErrors | nu
   return isApiValidationErrors(errors) ? errors : null;
 };
 
+interface ApiConflictErrorResponse {
+  errors?: { code?: unknown };
+}
+
+/** The stable `code` of a 409 `ConflictError`, or null for any other error. */
+export const getApiConflictCode = (error: unknown): string | null => {
+  if (
+    !axios.isAxiosError<ApiConflictErrorResponse>(error) ||
+    error.response?.status !== HTTP_STATUS.CONFLICT
+  ) {
+    return null;
+  }
+
+  const code = error.response.data?.errors?.code;
+  return typeof code === "string" ? code : null;
+};
+
 const API_URL = import.meta.env.VITE_API_URL;
 const TOKEN = import.meta.env.VITE_DEV_TOKEN;
 
