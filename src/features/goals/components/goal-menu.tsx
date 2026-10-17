@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { CircleCheckIcon, EllipsisIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -8,43 +9,66 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCompleteGoalMutation } from "@/features/goals/api/tanstack/use-complete-goal";
+import { CompleteGoalDialog } from "@/features/goals/components/complete-goal-dialog";
 import type { Goal } from "@/features/goals/types/goal";
+import type { Task } from "@/features/tasks/types/task";
+import { countOpenTasks } from "@/features/tasks/utils/count-open-tasks";
 
 type GoalMenuProps = {
   goal: Goal;
+  /** Every Task of the goal, subtasks and closed ones included. */
+  tasks: readonly Task[];
 };
 
-/** The Goal details ellipsis menu: mark as completed (hidden once the goal is completed). */
-export const GoalMenu = ({ goal }: GoalMenuProps) => {
+/**
+ * The Goal details ellipsis menu: mark as completed (hidden once the goal is completed).
+ * A goal with Open tasks asks for confirmation first, since completing drops them.
+ */
+export const GoalMenu = ({ goal, tasks }: GoalMenuProps) => {
   const { mutate, isPending } = useCompleteGoalMutation();
+  const [isConfirming, setIsConfirming] = useState(false);
   const menuLabel = `Goal actions for ${goal.name}`;
 
   if (goal.completed_at !== null) return null;
 
+  const openTaskCounts = countOpenTasks(tasks);
+  const hasOpenTasks = Object.values(openTaskCounts).some((count) => count > 0);
+
+  const complete = () => mutate(goal.reference_xid, { onSuccess: () => setIsConfirming(false) });
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        disabled={isPending}
-        render={
-          <Button
-            type="button"
-            variant="outline"
-            size="icon-sm"
-            aria-label={menuLabel}
-            title={menuLabel}
-          />
-        }>
-        <EllipsisIcon />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger
           disabled={isPending}
-          closeOnClick
-          onClick={() => mutate(goal.reference_xid)}>
-          <CircleCheckIcon />
-          Mark as completed
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          render={
+            <Button
+              type="button"
+              variant="outline"
+              size="icon-sm"
+              aria-label={menuLabel}
+              title={menuLabel}
+            />
+          }>
+          <EllipsisIcon />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem
+            disabled={isPending}
+            closeOnClick
+            onClick={() => (hasOpenTasks ? setIsConfirming(true) : complete())}>
+            <CircleCheckIcon />
+            Mark as completed
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <CompleteGoalDialog
+        open={isConfirming}
+        onOpenChange={setIsConfirming}
+        openTaskCounts={openTaskCounts}
+        pending={isPending}
+        onConfirm={complete}
+      />
+    </>
   );
 };

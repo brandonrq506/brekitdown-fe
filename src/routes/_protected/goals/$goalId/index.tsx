@@ -56,7 +56,7 @@ function RouteComponent() {
           </div>
           <div className="flex items-center gap-2">
             <GoalStarButton goal={data.data} />
-            <GoalMenu goal={data.data} />
+            <GoalMenu goal={data.data} tasks={tasksData.data} />
           </div>
         </div>
         <div className="flex items-center justify-between gap-4">

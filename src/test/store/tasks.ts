@@ -41,3 +41,16 @@ export const newlyCreatedTask = buildTask({
   due_at: null,
   notes_count: 0,
 });
+
+export const closedTasks: Task[] = [
+  buildTask({ reference_xid: "task_completed", status: TASK_STATUS.COMPLETED }),
+  buildTask({ reference_xid: "task_dropped", status: TASK_STATUS.DROPPED }),
+];
+
+/** Two scheduled and one on hold, alongside closed ones. */
+export const openTasks: Task[] = [
+  buildTask({ reference_xid: "task_scheduled_1", status: TASK_STATUS.SCHEDULED }),
+  buildTask({ reference_xid: "task_scheduled_2", status: TASK_STATUS.SCHEDULED }),
+  buildTask({ reference_xid: "task_on_hold", status: TASK_STATUS.ON_HOLD }),
+  ...closedTasks,
+];
