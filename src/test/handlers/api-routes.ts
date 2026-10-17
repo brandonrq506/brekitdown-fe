@@ -11,6 +11,8 @@ const apiUrl = (endpoint: string) => `${api.defaults.baseURL}${endpoint}`;
 export const apiRoutes = {
   goals: apiUrl(GOALS_ENDPOINT),
   goal: (referenceXid = ":goalReferenceXid") => apiUrl(`${GOALS_ENDPOINT}/${referenceXid}`),
+  goalComplete: (referenceXid = ":goalReferenceXid") =>
+    apiUrl(`${GOALS_ENDPOINT}/${referenceXid}/complete`),
   tasks: apiUrl(TASKS_ENDPOINT),
   task: (referenceXid = ":taskReferenceXid") => apiUrl(`${TASKS_ENDPOINT}/${referenceXid}`),
   taskNotes: (taskReferenceXid = ":taskReferenceXid") =>

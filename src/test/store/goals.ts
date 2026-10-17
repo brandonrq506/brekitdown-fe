@@ -7,6 +7,7 @@ const goalDefaults = {
   name: "Learn shadcn/ui",
   description: "Build a small interface with components we own.",
   archived_at: null,
+  completed_at: null,
   starred_at: null,
 } satisfies Goal;
 
@@ -26,6 +27,8 @@ export const goalWithoutDescription = buildGoal({
 });
 
 export const starredGoal = buildGoal({ starred_at: "2026-09-13T12:00:00Z" });
+
+export const completedGoal = buildGoal({ completed_at: "2026-09-20T12:00:00Z" });
 
 export const newlyCreatedGoal = buildGoal({
   reference_xid: "goal_created",
