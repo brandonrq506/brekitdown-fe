@@ -6,6 +6,7 @@ export interface Goal extends ApiResource {
   name: string;
   description: string | null;
   archived_at: string | null;
+  completed_at: string | null;
   starred_at: string | null;
 }
 

@@ -2,6 +2,8 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { createFileRoute } from "@tanstack/react-router";
 import { goalDetailsPageQueryOptions } from "@/features/goals/api/queries";
+import { GoalCompletedAt } from "@/features/goals/components/goal-completed-at";
+import { GoalMenu } from "@/features/goals/components/goal-menu";
 import { GoalStarButton } from "@/features/goals/components/goal-star-button";
 import { goalDetailsPageTasksQueryOptions } from "@/features/tasks/api/queries";
 import { TaskCard } from "@/features/tasks/components/task-card";
@@ -50,8 +52,12 @@ function RouteComponent() {
                 {data.data.description}
               </p>
             )}
+            <GoalCompletedAt completedAt={data.data.completed_at} />
           </div>
-          <GoalStarButton goal={data.data} />
+          <div className="flex items-center gap-2">
+            <GoalStarButton goal={data.data} />
+            <GoalMenu goal={data.data} />
+          </div>
         </div>
         <div className="flex items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
