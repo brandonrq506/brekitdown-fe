@@ -1,11 +1,11 @@
+import { startTransition, useState } from "react";
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
+import { ListFilterIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { goalsIndexPageQueryOptions } from "@/features/goals/api/queries";
 import { CreateGoalDialog } from "@/features/goals/components/create-goal-dialog";
 import { GoalsGrid } from "@/features/goals/components/goals-grid";
-
-const goalsQueryOptions = goalsIndexPageQueryOptions();
 
 function getLoadMoreLabel(isFetchingNextPage: boolean, isFetchNextPageError: boolean) {
   if (isFetchingNextPage) return "Loading…";
@@ -15,8 +15,13 @@ function getLoadMoreLabel(isFetchingNextPage: boolean, isFetchNextPageError: boo
 }
 
 export function GoalsIndexPage() {
+  const [includeCompleted, setIncludeCompleted] = useState(false);
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetchNextPageError } =
-    useSuspenseInfiniteQuery(goalsQueryOptions);
+    useSuspenseInfiniteQuery(goalsIndexPageQueryOptions({ includeCompleted }));
+
+  // A transition keeps the current list on screen while the other filter's first page loads,
+  // instead of suspending the whole page.
+  const toggleCompleted = () => startTransition(() => setIncludeCompleted((value) => !value));
 
   const goals = data.pages.flatMap((page) => page.data);
   const totalCount = data.pages[0]?.meta.total_count ?? 0;
@@ -30,7 +35,17 @@ export function GoalsIndexPage() {
             {totalCount} {totalCount === 1 ? "goal" : "goals"}
           </p>
         </div>
-        <CreateGoalDialog />
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            className="aria-pressed:bg-muted aria-pressed:text-foreground"
+            aria-pressed={!includeCompleted}
+            onClick={toggleCompleted}>
+            <ListFilterIcon data-icon="inline-start" />
+            Hide completed
+          </Button>
+          <CreateGoalDialog />
+        </div>
       </header>
       <GoalsGrid goals={goals} />
       {isFetchNextPageError && (
