@@ -96,9 +96,3 @@ it("does not complete the goal when the warning is cancelled", async () => {
   await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   expect(completed).not.toHaveBeenCalled();
 });
-
-it("renders no menu for a completed goal", () => {
-  render(<GoalMenu goal={completedGoal} tasks={[]} />);
-
-  expect(screen.queryByRole("button", { name: /Goal actions/ })).not.toBeInTheDocument();
-});

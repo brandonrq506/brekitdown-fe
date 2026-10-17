@@ -13,6 +13,8 @@ export const apiRoutes = {
   goal: (referenceXid = ":goalReferenceXid") => apiUrl(`${GOALS_ENDPOINT}/${referenceXid}`),
   goalComplete: (referenceXid = ":goalReferenceXid") =>
     apiUrl(`${GOALS_ENDPOINT}/${referenceXid}/complete`),
+  goalReopen: (referenceXid = ":goalReferenceXid") =>
+    apiUrl(`${GOALS_ENDPOINT}/${referenceXid}/reopen`),
   tasks: apiUrl(TASKS_ENDPOINT),
   task: (referenceXid = ":taskReferenceXid") => apiUrl(`${TASKS_ENDPOINT}/${referenceXid}`),
   taskNotes: (taskReferenceXid = ":taskReferenceXid") =>

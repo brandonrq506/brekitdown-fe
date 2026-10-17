@@ -30,5 +30,6 @@ export const goalHandlers = [
   http.post(apiRoutes.goals, () => mockGoalResponse(newlyCreatedGoal, { status: 201 })),
   http.patch(apiRoutes.goal(), () => mockGoalResponse(starredGoal)),
   http.post(apiRoutes.goalComplete(), () => mockGoalResponse(completedGoal)),
+  http.post(apiRoutes.goalReopen(), () => mockGoalResponse(goal)),
   http.delete(apiRoutes.goal(), () => new HttpResponse(null, { status: 204 })),
 ];

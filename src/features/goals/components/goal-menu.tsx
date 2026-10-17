@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CircleCheckIcon, EllipsisIcon } from "lucide-react";
+import { CircleCheckIcon, EllipsisIcon, RotateCcwIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCompleteGoalMutation } from "@/features/goals/api/tanstack/use-complete-goal";
+import { useReopenGoalMutation } from "@/features/goals/api/tanstack/use-reopen-goal";
 import { CompleteGoalDialog } from "@/features/goals/components/complete-goal-dialog";
 import type { Goal } from "@/features/goals/types/goal";
 import type { Task } from "@/features/tasks/types/task";
@@ -21,15 +22,17 @@ type GoalMenuProps = {
 };
 
 /**
- * The Goal details ellipsis menu: mark as completed (hidden once the goal is completed).
+ * The Goal details ellipsis menu: mark as completed, or reopen once the goal is completed.
  * A goal with Open tasks asks for confirmation first, since completing drops them.
+ * Reopening needs no confirmation: it only clears the completion.
  */
 export const GoalMenu = ({ goal, tasks }: GoalMenuProps) => {
-  const { mutate, isPending } = useCompleteGoalMutation();
+  const { mutate, isPending: isCompleting } = useCompleteGoalMutation();
+  const { mutate: reopen, isPending: isReopening } = useReopenGoalMutation();
   const [isConfirming, setIsConfirming] = useState(false);
   const menuLabel = `Goal actions for ${goal.name}`;
-
-  if (goal.completed_at !== null) return null;
+  const isPending = isCompleting || isReopening;
+  const isCompleted = goal.completed_at !== null;
 
   const openTaskCounts = countOpenTasks(tasks);
   const hasOpenTasks = Object.values(openTaskCounts).some((count) => count > 0);
@@ -53,20 +56,30 @@ export const GoalMenu = ({ goal, tasks }: GoalMenuProps) => {
           <EllipsisIcon />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            disabled={isPending}
-            closeOnClick
-            onClick={() => (hasOpenTasks ? setIsConfirming(true) : complete())}>
-            <CircleCheckIcon />
-            Mark as completed
-          </DropdownMenuItem>
+          {isCompleted ? (
+            <DropdownMenuItem
+              disabled={isPending}
+              closeOnClick
+              onClick={() => reopen(goal.reference_xid)}>
+              <RotateCcwIcon />
+              Reopen
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem
+              disabled={isPending}
+              closeOnClick
+              onClick={() => (hasOpenTasks ? setIsConfirming(true) : complete())}>
+              <CircleCheckIcon />
+              Mark as completed
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
       <CompleteGoalDialog
         open={isConfirming}
         onOpenChange={setIsConfirming}
         openTaskCounts={openTaskCounts}
-        pending={isPending}
+        pending={isCompleting}
         onConfirm={complete}
       />
     </>
